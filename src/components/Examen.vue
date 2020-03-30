@@ -28,30 +28,16 @@
                         <h6>Aciertos totales: {{aciertos}}</h6>
                     </div>
                 </div>
-                <div class="row">
+                <div class="row" v-for="aciertosM in aciertosPorMateria" :key="aciertosM.nombre">
                     <div class="col-md-2">
-                        <h6>Matemáticas</h6>
+                        <h6>{{aciertosM.nombre}}</h6>
                     </div>
                     <div class="col-md-8">
                         <div class="progress">
-                            <div class="progress-bar" role="progressbar" style="width:90%;"
+                            <div class="progress-bar" role="progressbar" :style="{width: aciertosM.porcentaje+'%'}"
                                 aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">
-                                10 /
-                                12
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-2">
-                        <h6>Español</h6>
-                    </div>
-                    <div class="col-md-8">
-                        <div class="progress">
-                            <div class="progress-bar" role="progressbar" style="width:90%;"
-                                aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">
-                                9 /
-                                12
+                                {{aciertosM.aciertos}} /
+                                {{aciertosM.numReactivos}}
                             </div>
                         </div>
                     </div>
@@ -113,7 +99,8 @@ export default {
            const tmp = {
                "nombre" : materia.nombre,
                "numReactivos": materia.numReactivos,
-               "aciertos" :0
+               "aciertos" :0,
+               "porcentaje" : 0
            }
            this.aciertosPorMateria.push(tmp);
        }
@@ -127,21 +114,21 @@ export default {
         },
         calificarExamen(){
             for (let i = 0; i < examen.respuestas.length; i++) {
-                const respuesta = examen.respuestas[i];
                 if (this.respuestas[i] !== ''){
-                    if (respuesta === this.respuestas[i]) {
+                    if (examen.respuestas[i] === this.respuestas[i]) {
                         this.aciertos ++;
-                        for (const materia of this.examen.materias) {
-                            if (i >= materia.inicio -1 && i <= materia.fin -1) {
-                                console.log("Contador parcial");
-                                // Ver logica para incrementar contador de obj.
-                                
-                            }
+                        for (let j = 0; j < examen.materias.length; j++) {
+                            if (i >= examen.materias[j].inicio - 1 && 
+                                i<=examen.materias[j].fin -1 ) {
+                                this.aciertosPorMateria[j].aciertos ++;
+                            }                            
                         }
                     }
                 }
             }
-            
+            for (const aciertosM of this.aciertosPorMateria) {
+                aciertosM. porcentaje = (aciertosM.aciertos/aciertosM.numReactivos)*100;
+            }            
         }
     }
 
