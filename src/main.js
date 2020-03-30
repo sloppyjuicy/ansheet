@@ -8,6 +8,7 @@ import 'bootstrap/dist/css/bootstrap.min.css'
 import "izitoast/dist/css/iziToast.css";
 
 import NotFound from './components/NotFound'
+import Welcome from './components/Welcome'
 import Examen from './components/Examen'
 
 import examenComipems from './canswers/unam2013comipems.json';
@@ -18,6 +19,10 @@ Vue.config.productionTip = false
 const router = new VueRouter({
   mode: 'history',
   routes : [
+    {
+      path: '/', 
+      component: Welcome,
+    },
     { 
       path: '/comipems/:examen', 
       component: Examen,
