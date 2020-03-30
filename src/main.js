@@ -1,10 +1,13 @@
 import Vue from 'vue'
 import App from './App.vue'
-import Examen from './components/Examen'
 import VueRouter from 'vue-router'
+import VueIziToast from 'vue-izitoast'
 
 import 'bootstrap'
 import 'bootstrap/dist/css/bootstrap.min.css'
+import "izitoast/dist/css/iziToast.css";
+
+import Examen from './components/Examen'
 
 Vue.config.productionTip = false
 
@@ -20,6 +23,7 @@ const router = new VueRouter({
 })
 
 Vue.use(VueRouter)
+Vue.use(VueIziToast);
 
 new Vue({
   render: h => h(App),
