@@ -3,12 +3,12 @@
         <div class="row">
             <div class="col-md-12">
                 <h4>Examen de simulación</h4>
-                <h5>{{examen.institucion}} {{examen.annio}} {{examen.area}}</h5>
+                <h5>{{examen.institucion}} {{examen.area}} {{examen.annio}}</h5>
             </div>
         </div>
-        <form class="pb-3" v-if="!examenTerminado">
+        <form class="pb-2" v-if="!examenTerminado">
             <div class="row">
-                <div class="col-md-6 col-sm-12">
+                <div class="col-md-6 col-sm-12 mb-2">
                 <input type="text" class="form-control" placeholder="Nombre" 
                 v-model="datosAlumno.nombre" >
                 </div>
@@ -75,7 +75,7 @@
 </template>        
 
 <script>
-    import examen from "../canswers/unam2020area3.json";
+import examen from "../canswers/unam2020area3.json";
 export default {
     name:'Examen',
     data(){
@@ -183,69 +183,5 @@ export default {
 </script>
 
 <style scoped>
-
-multicol{
-    -webkit-columns: 100px 4; /* Chrome, Safari, Opera */
-    -moz-columns: 100px 4; /* Firefox */
-    columns: 100px 4;
-    -moz-column-fill: balance; /* Firefox */
-    column-fill: balance;
-}
-
-/* Extra small devices (phones, 600px and down) */
-@media only screen and (max-width: 600px) {
-    .multicol{
-        text-align: center;
-        -webkit-columns: 100px 1; /* Chrome, Safari, Opera */
-        -moz-columns: 100px 1; /* Firefox */
-        columns: 100px 1;
-        -moz-column-fill: balance; /* Firefox */
-        column-fill: balance;
-    }
-}
-
-/* Small devices (portrait tablets and large phones, 600px and up) */
-@media only screen and (min-width: 600px) {
-    .multicol{
-        -webkit-columns: 100px 2; /* Chrome, Safari, Opera */
-        -moz-columns: 100px 2; /* Firefox */
-        columns: 100px 2;
-        -moz-column-fill: balance; /* Firefox */
-        column-fill: balance;
-    }
-}
-
-/* Medium devices (landscape tablets, 768px and up) */
-@media only screen and (min-width: 768px) {
-    .multicol{
-        -webkit-columns: 100px 3; /* Chrome, Safari, Opera */
-        -moz-columns: 100px 3; /* Firefox */
-        columns: 100px 3;
-        -moz-column-fill: balance; /* Firefox */
-        column-fill: balance;
-    }
-}
-
-/* Large devices (laptops/desktops, 992px and up) */
-@media only screen and (min-width: 992px) {
-    .multicol{
-        -webkit-columns: 100px 4; /* Chrome, Safari, Opera */
-        -moz-columns: 100px 4; /* Firefox */
-        columns: 100px 4;
-        -moz-column-fill: balance; /* Firefox */
-        column-fill: balance;
-    }
-}
-
-/* Extra large devices (large laptops and desktops, 1200px and up) */
-@media only screen and (min-width: 1200px) {
-    .multicol{
-        -webkit-columns: 100px 5; /* Chrome, Safari, Opera */
-        -moz-columns: 100px 5; /* Firefox */
-        columns: 100px 5;
-        -moz-column-fill: balance; /* Firefox */
-        column-fill: balance;
-    }
-}
-
+    @import url('../css/answersheet.css');
 </style>
