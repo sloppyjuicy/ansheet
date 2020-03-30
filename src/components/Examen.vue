@@ -19,13 +19,13 @@
             </div>
         </form>
         <div v-else>
-            <div class="card-body">
+            <!--div class="card-body"-->
                 <div class="row">
                     <div class="col-md-6">
                         <h5>{{datosAlumno.nombre}} {{datosAlumno.apellidos}}</h5>
                     </div>
                     <div class="col-md-6 text-center">
-                        <h6>Aciertos totales: {{aciertos}}</h6>
+                        <h5>Aciertos totales: {{aciertos}}</h5>
                     </div>
                 </div>
                 <div class="row" v-for="aciertosM in aciertosPorMateria" :key="aciertosM.nombre">
@@ -34,7 +34,8 @@
                     </div>
                     <div class="col-md-8">
                         <div class="progress">
-                            <div class="progress-bar" role="progressbar" :style="{width: aciertosM.porcentaje+'%'}"
+                            <div class="progress-bar" role="progressbar" 
+                                :style="{width: aciertosM.porcentaje+'%'}"
                                 aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">
                                 {{aciertosM.aciertos}} /
                                 {{aciertosM.numReactivos}}
@@ -42,9 +43,9 @@
                         </div>
                     </div>
                 </div>
-            </div>
+            <!--/div-->
         </div>
-        <div class="row">
+        <div class="row mt-3">
             <div class="col-md-12 multicol">
                 <ol>
                     <div v-for="i in examen.numReactivos" :key="i">
@@ -58,7 +59,8 @@
                                 :value="String.fromCharCode(64+n)" 
                                 v-model="respuestas[i-1]" v-if="respuestas" >
                             </div>
-                            <label v-if="examenTerminado">&#x2714;</label>
+                            <label v-if="examenTerminado && aciertoPorPregunta[i]">&#x2714;</label>
+                            <label v-if="examenTerminado && !aciertoPorPregunta[i]">&#x2718;</label>
                         </li>
                     </div>
                     
@@ -82,11 +84,12 @@ export default {
             examenTerminado : false,
             respuestas : null,
             datosAlumno :{
-                nombre : 'Rodrigo',
-                apellidos : 'Francisco'
+                nombre : '',
+                apellidos : ''
             },
             aciertos : 0,
-            aciertosPorMateria: []
+            aciertosPorMateria: [],
+            aciertoPorPregunta :[],
         }
     },
     mounted(){
@@ -109,26 +112,70 @@ export default {
     methods :{
         terminar(){
             // Validar si lleno el nombre y si contesto todo
-            this.calificarExamen();
-            this.examenTerminado = true;
+            if (this.datosAlumnoForm()) {
+                if (this.todasLasPreguntasContestadas()) {
+                    this.calificarExamen();
+                    this.examenTerminado = true;
+                }else{
+                    this.$toast.warning('Contesta todas las preguntas', 'OJO',{
+                        icon: "icon-person",
+                        position: "topCenter",
+                    });
+                }
+                
+            }else{
+                this.$toast.warning('Ingresa tu nombre y apellidos', 'OJO',
+                    {
+                        icon: "icon-person",
+                        position: "topCenter",
+                    }
+                );
+            }
+            
         },
         calificarExamen(){
             for (let i = 0; i < examen.respuestas.length; i++) {
                 if (this.respuestas[i] !== ''){
                     if (examen.respuestas[i] === this.respuestas[i]) {
                         this.aciertos ++;
+                        this.aciertoPorPregunta.push(true);
                         for (let j = 0; j < examen.materias.length; j++) {
                             if (i >= examen.materias[j].inicio - 1 && 
                                 i<=examen.materias[j].fin -1 ) {
                                 this.aciertosPorMateria[j].aciertos ++;
                             }                            
                         }
+                    }else{
+                        this.aciertoPorPregunta.push(false);
                     }
                 }
             }
             for (const aciertosM of this.aciertosPorMateria) {
                 aciertosM. porcentaje = (aciertosM.aciertos/aciertosM.numReactivos)*100;
             }            
+        },
+        datosAlumnoForm(){
+            if (this.datosAlumno.nombre.length < 3 && this.datosAlumno.apellidos < 5 ) {
+                return false;
+            }
+            return true;
+        },
+        todasLasPreguntasContestadas(){
+            console.log(this.dimensionRespuestas,this.examen.numReactivos);
+            
+            if (this.dimensionRespuestas === this.examen.numReactivos) {
+                return true;
+            }
+            return false;
+        }
+    },
+    computed:{
+        dimensionRespuestas(){
+            let dimension = this.respuestas.filter((respuesta)=>{
+                return respuesta !== ""
+            }).length
+
+            return dimension;
         }
     }
 
