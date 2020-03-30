@@ -26,19 +26,14 @@
       </div>
     </nav>
 
-    <Examen></Examen>
+    <router-view></router-view>
 
   </div>
 </template>
 
 <script>
 
-import Examen from './components/Examen'
-
 export default {
   name: 'App',
-  components: {
-    Examen
-  }
 }
 </script>
