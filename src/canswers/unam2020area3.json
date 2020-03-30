@@ -1,7 +1,8 @@
 {
 "institucion" : "UNAM",
 "annio" : 2020,
-"area" : "área 3",
+"area" : "COMIPEMS",
+"tipo" : "bachillerato",
 "numOpciones" :4,
 "numReactivos" : 128,
 "materias" :[
