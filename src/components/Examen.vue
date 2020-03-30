@@ -75,12 +75,15 @@
 </template>        
 
 <script>
-import examen from "../canswers/unam2020area3.json";
+//import examen from "../canswers/unam2020area3.json";
 export default {
     name:'Examen',
+    props:[
+        'examen'
+    ],
     data(){
         return {
-            examen : examen,
+            //examen : examen1,
             examenTerminado : false,
             respuestas : null,
             datosAlumno :{
@@ -93,12 +96,12 @@ export default {
         }
     },
     mounted(){
-        this.respuestas =  new Array(examen.numReactivos).fill('')     
+        this.respuestas =  new Array(this.examen.numReactivos).fill('')     
         /*const {inicio,fin, ...tmp} = examen.materias[1]; 
             Es una buena solución para copiar un objeto sin algunas propiedades
             pero Vue JS no lo permite porque inicio y fin no se vuelven a ocupar.
         */
-       for (const materia of examen.materias) {
+       for (const materia of this.examen.materias) {
            const tmp = {
                "nombre" : materia.nombre,
                "numReactivos": materia.numReactivos,
@@ -134,14 +137,14 @@ export default {
             
         },
         calificarExamen(){
-            for (let i = 0; i < examen.respuestas.length; i++) {
+            for (let i = 0; i < this.examen.respuestas.length; i++) {
                 if (this.respuestas[i] !== ''){
-                    if (examen.respuestas[i] === this.respuestas[i]) {
+                    if (this.examen.respuestas[i] === this.respuestas[i]) {
                         this.aciertos ++;
                         this.aciertoPorPregunta.push(true);
-                        for (let j = 0; j < examen.materias.length; j++) {
-                            if (i >= examen.materias[j].inicio - 1 && 
-                                i<=examen.materias[j].fin -1 ) {
+                        for (let j = 0; j < this.examen.materias.length; j++) {
+                            if (i >= this.examen.materias[j].inicio - 1 && 
+                                i<=this.examen.materias[j].fin -1 ) {
                                 this.aciertosPorMateria[j].aciertos ++;
                             }                            
                         }
