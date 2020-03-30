@@ -1,29 +1,31 @@
 <template>
     <div class="container-xl py-4">
         <div class="row">
-            <div class="col-md-12 m-3">
+            <div class="col-md-12">
                 <h4>Examen de simulación</h4>
-                <h5>UNAM 2012 aréa 2</h5>
+                <h5>{{examen.institucion}} {{examen.annio}} {{examen.area}}</h5>
             </div>
         </div>
         <form class="pb-3" v-if="!examenTerminado">
             <div class="row">
-                <div class="col">
-                <input type="text" class="form-control" placeholder="Nombre" v-model="datosAlumno.nombre" >
+                <div class="col-md-6 col-sm-12">
+                <input type="text" class="form-control" placeholder="Nombre" 
+                v-model="datosAlumno.nombre" >
                 </div>
-                <div class="col">
-                <input type="text" class="form-control" placeholder="Apellidos" v-model="datosAlumno.apellidos">
+                <div class="col-md-6 col-sm-12">
+                <input type="text" class="form-control" placeholder="Apellidos" 
+                v-model="datosAlumno.apellidos">
                 </div>
             </div>
         </form>
-        <div class="pb-3" v-else>
+        <div v-else>
             <div class="card-body">
                 <div class="row">
                     <div class="col-md-6">
                         <h5>{{datosAlumno.nombre}} {{datosAlumno.apellidos}}</h5>
                     </div>
                     <div class="col-md-6 text-center">
-                        <h6>Aciertos totales: 36</h6>
+                        <h6>Aciertos totales: {{aciertos}}</h6>
                     </div>
                 </div>
                 <div class="row">
@@ -59,34 +61,87 @@
         <div class="row">
             <div class="col-md-12 multicol">
                 <ol>
-                    <li v-for="i in numReactivos" :key="i">
-                        <div v-for="n in numOpciones" :key="n" class="d-inline mr-1">
-                            <label class="mr-1">{{String.fromCharCode(64+n)}}</label>
-                            <input type="radio" :name="'test-'+i" :disabled="examenTerminado">
-                        </div>
-                        <label v-if="examenTerminado">&#x2714;</label>
-                    </li>
+                    <div v-for="i in examen.numReactivos" :key="i">
+                        <div v-for="materia in examen.materias" :key="materia.nombre">
+                                <label v-if="i == materia.inicio">{{materia.nombre}}</label>
+                            </div>
+                        <li>
+                            <div v-for="n in examen.numOpciones" :key="n" class="d-inline mr-1">
+                                <label class="mr-1">{{String.fromCharCode(64+n)}}</label>
+                                <input type="radio" :name="'test-'+i" :disabled="examenTerminado" 
+                                :value="String.fromCharCode(64+n)" 
+                                v-model="respuestas[i-1]" v-if="respuestas" >
+                            </div>
+                            <label v-if="examenTerminado">&#x2714;</label>
+                        </li>
+                    </div>
+                    
                 </ol>
+            </div>
+            <div class="col-md-4 offset-md-4 text-center mt-2">
+                <button type="button" class="btn btn-outline-primary btn-block" 
+                @click="terminar">Terminar</button>
             </div>
         </div>
     </div>
 </template>        
 
 <script>
+    import examen from "../canswers/unam2020area3.json";
 export default {
     name:'Examen',
     data(){
-        let numReactivos = 120;
-        let datosAlumno = {
-            nombre: 'Rodrigo',
-            apellidos : 'Francisco'
-        };
         return {
-            numReactivos,
-            datosAlumno,
+            examen : examen,
             examenTerminado : false,
-            numOpciones : 4,
-            respuestas : new Array('').fill(numReactivos)
+            respuestas : null,
+            datosAlumno :{
+                nombre : 'Rodrigo',
+                apellidos : 'Francisco'
+            },
+            aciertos : 0,
+            aciertosPorMateria: []
+        }
+    },
+    mounted(){
+        this.respuestas =  new Array(examen.numReactivos).fill('')     
+        /*const {inicio,fin, ...tmp} = examen.materias[1]; 
+            Es una buena solución para copiar un objeto sin algunas propiedades
+            pero Vue JS no lo permite porque inicio y fin no se vuelven a ocupar.
+        */
+       for (const materia of examen.materias) {
+           const tmp = {
+               "nombre" : materia.nombre,
+               "numReactivos": materia.numReactivos,
+               "aciertos" :0
+           }
+           this.aciertosPorMateria.push(tmp);
+       }
+        // Validar si se cargo bien el examen.   
+    },
+    methods :{
+        terminar(){
+            // Validar si lleno el nombre y si contesto todo
+            this.calificarExamen();
+            this.examenTerminado = true;
+        },
+        calificarExamen(){
+            for (let i = 0; i < examen.respuestas.length; i++) {
+                const respuesta = examen.respuestas[i];
+                if (this.respuestas[i] !== ''){
+                    if (respuesta === this.respuestas[i]) {
+                        this.aciertos ++;
+                        for (const materia of this.examen.materias) {
+                            if (i >= materia.inicio -1 && i <= materia.fin -1) {
+                                console.log("Contador parcial");
+                                // Ver logica para incrementar contador de obj.
+                                
+                            }
+                        }
+                    }
+                }
+            }
+            
         }
     }
 
