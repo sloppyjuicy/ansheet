@@ -95,7 +95,7 @@ export default {
             aciertoPorPregunta :[],
         }
     },
-    mounted(){
+    created(){
         this.respuestas =  new Array(this.examen.numReactivos).fill('')     
         /*const {inicio,fin, ...tmp} = examen.materias[1]; 
             Es una buena solución para copiar un objeto sin algunas propiedades
@@ -110,7 +110,17 @@ export default {
            }
            this.aciertosPorMateria.push(tmp);
        }
+       console.log("Entro a created");
         // Validar si se cargo bien el examen.   
+    },
+    beforeDestroy(){
+        this.examenTerminado = false;
+        this.respuestas = null;
+        this.aciertos = 0;
+        this.aciertosPorMateria = [];
+        this.aciertoPorPregunta = [];
+        this.datosAlumno.nombre = '';
+        this.datosAlumno.apellidos = '';
     },
     methods :{
         terminar(){
@@ -137,6 +147,7 @@ export default {
             
         },
         calificarExamen(){
+            console.log(this.aciertosPorMateria);
             for (let i = 0; i < this.examen.respuestas.length; i++) {
                 if (this.respuestas[i] !== ''){
                     if (this.examen.respuestas[i] === this.respuestas[i]) {
