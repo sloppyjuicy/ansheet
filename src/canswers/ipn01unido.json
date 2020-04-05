@@ -5,7 +5,45 @@
     "tipo" : "licenciatura",
     "numOpciones" :4,
     "numReactivos" : 130,
-    "materias" :[   ],
+    
+    "materias" :[
+        {
+            "nombre": "Matemáticas",
+            "inicio": 1,
+            "fin": 50,
+            "numReactivos" : 50
+        },
+        {
+            "nombre": "Biología",
+            "inicio": 51,
+            "fin": 60,
+            "numReactivos" : 10
+        },
+        {
+            "nombre": "Química",
+            "inicio": 61,
+            "fin": 75,
+            "numReactivos" : 15
+        },
+        {
+            "nombre": "Física",
+            "inicio": 76,
+            "fin": 86,
+            "numReactivos" : 11
+        },
+        {
+            "nombre": "Español",
+            "inicio": 87,
+            "fin": 126,
+            "numReactivos" : 40
+        },
+        {
+            "nombre": "Física II",
+            "inicio": 127,
+            "fin": 130,
+            "numReactivos" : 4
+        }        
+    ],
     "respuestas": [
         "C",
         "B",
