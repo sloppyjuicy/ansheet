@@ -121,6 +121,7 @@ export default {
         this.aciertoPorPregunta = [];
         this.datosAlumno.nombre = '';
         this.datosAlumno.apellidos = '';
+        //delete this.respuestas
     },
     methods :{
         terminar(){
