@@ -24,14 +24,17 @@ const router = new VueRouter({
       component: Welcome,
     },
     { 
-      path: '/comipems/:examen', 
+      path: '/comipems/:debug?', 
       component: Examen,
       props : {examen:examenComipems}
     },
     { 
-      path: '/universidad/:examen', 
+      path: '/universidad/:debug?', 
       component: Examen,
-      props : {examen:examenUniversidad}
+      props : {
+        default: true,
+        examen:examenUniversidad
+      }
     },
     {
       path : '*',

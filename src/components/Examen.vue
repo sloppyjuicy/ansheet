@@ -12,20 +12,16 @@
                 <input type="text" class="form-control" placeholder="Nombre" 
                 v-model="datosAlumno.nombre" >
                 </div>
-                <div class="col-md-6 col-sm-12">
-                <input type="text" class="form-control" placeholder="Apellidos" 
-                v-model="datosAlumno.apellidos">
-                </div>
-                <div class="col-md-6 col-sm-12">
+                <!--div class="col-md-6 col-sm-12" v-if="debug">
                     <button @click="rellenar" class="btn btn-outline-primary">Rellenar</button>
-                </div>
+                </div-->
             </div>
         </form>
         <div v-else>
             <!--div class="card-body"-->
                 <div class="row">
                     <div class="col-md-6">
-                        <h5>{{datosAlumno.nombre}} {{datosAlumno.apellidos}}</h5>
+                        <h5>{{datosAlumno.nombre}}</h5>
                     </div>
                     <div class="col-md-6 text-center">
                         <h5>Aciertos totales: {{aciertos}}</h5>
@@ -62,8 +58,9 @@
                                 :value="String.fromCharCode(64+n)" 
                                 v-model="respuestas[i-1]" v-if="respuestas" >
                             </div>
-                            <label v-if="examenTerminado && aciertoPorPregunta[i]">&#x2714;</label>
-                            <label v-if="examenTerminado && !aciertoPorPregunta[i]">&#x2718;</label>
+                            <label v-if="examenTerminado && aciertoPorPregunta[i-1]">&#x2714;</label>
+                            <label v-if="examenTerminado && !aciertoPorPregunta[i-1]">&#x2718;</label>
+                            <!--label class="ml-1" v-if="debug">{{examen.respuestas[i-1]}}</label-->
                         </li>
                     </div>
                     
@@ -95,16 +92,15 @@ export default {
     },
     data(){
         return {
-            //examen : examen1,
             examenTerminado : false,
             respuestas : null,
             datosAlumno :{
                 nombre : '',
-                apellidos : ''
             },
             aciertos : 0,
             aciertosPorMateria: [],
             aciertoPorPregunta :[],
+            debug: this.$route.params.debug === "true" ? true : false || false
         }
     },
     created(){
@@ -123,8 +119,15 @@ export default {
                "porcentaje" : 0
            }
            this.aciertosPorMateria.push(tmp);
-       }
+        }
         // Validar si se cargo bien el examen.   
+        if (this.debug === true ){
+            for (const i in this.respuestas) {
+                let random = Math.floor(Math.random() * 4)+1;
+                this.respuestas[i] = String.fromCharCode(64+random)
+            }
+            this.datosAlumno.nombre = 'Francesco Paolo'
+        }
     },
     beforeDestroy(){
         this.examenTerminado = false;
@@ -133,14 +136,13 @@ export default {
         this.aciertosPorMateria = [];
         this.aciertoPorPregunta = [];
         this.datosAlumno.nombre = '';
-        this.datosAlumno.apellidos = '';
         //delete this.respuestas
     },
     methods :{
         terminar(){
             // Validar si lleno el nombre y si contesto todo
             if (this.datosAlumnoForm()) {
-                if (this.todasLasPreguntasContestadas()) {
+                if (this.todasLasPreguntasContestadas() ) {
                     this.calificarExamen();
                     this.examenTerminado = true;
                 }else{
@@ -151,7 +153,7 @@ export default {
                 }
                 
             }else{
-                this.$toast.warning('Ingresa tu nombre y apellidos', 'OJO',
+                this.$toast.warning('Ingresa tu nombre completo', 'OJO',
                     {
                         icon: "icon-person",
                         position: "topCenter",
@@ -190,8 +192,7 @@ export default {
             }   
         },
         datosAlumnoForm(){
-            if (this.datosAlumno.nombre.length < 3 && 
-            this.datosAlumno.apellidos < 5 ) {
+            if (this.datosAlumno.nombre.length < 3 ) {
                 return false;
             }
             return true;
@@ -200,14 +201,7 @@ export default {
             if (this.dimensionRespuestas === this.examen.numReactivos) {
                 return true;
             }
-            //return false;
-            return true
-        },
-        rellenar(){
-            for (const i in this.respuestas) {
-                let random = Math.floor(Math.random() * 4)+1;
-                this.respuestas[i] = String.fromCharCode(64+random)
-            }
+            return false;
         }
     }
 }
