@@ -2,11 +2,11 @@
     <div class="container-xl py-4">
         <div class="row">
             <div class="col-md-12">
-                <h4>Examen de simulación</h4>
-                <h5>{{examen.institucion}} {{examen.area}} {{examen.annio}}</h5>
+                <h5>Examen de simulación {{examen.institucion}} 
+                    {{examen.area}} {{examen.annio}}</h5>
             </div>
         </div>
-        <form class="pb-2" v-if="!examenTerminado">
+        <form class="pb-1 pt-2" v-if="!examenTerminado">
             <div class="row">
                 <div class="col-md-6 col-sm-12 mb-2">
                 <input type="text" class="form-control" placeholder="Nombre" 
