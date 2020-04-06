@@ -117,6 +117,8 @@ export default {
            const tmp = {
                "nombre" : materia.nombre,
                "numReactivos": materia.numReactivos,
+               "inicio" : materia.inicio,
+               "fin" : materia.fin,
                "aciertos" :0,
                "porcentaje" : 0
            }
@@ -159,29 +161,37 @@ export default {
             
         },
         calificarExamen(){
-            let iterator = 0;
             for (let i = 0; i < this.examen.respuestas.length; i++) {
-                if (this.respuestas[i] !== ''){
-                    if (this.examen.respuestas[i] === this.respuestas[i]) {
-                        this.aciertos ++;
-                        this.aciertoPorPregunta.push(true);
-                        this.aciertosPorMateria[iterator].aciertos++;
-                        // Este es un buen acercamiento pero falla porque JS es async
-                        if (i + 1 >= this.examen.materias[iterator].fin) {
-                            iterator++;
-                            console.log("Changing iterator", iterator,i+1);
-                        }                            
-                    }else{
-                        this.aciertoPorPregunta.push(false);
-                    }
+                if (this.examen.respuestas[i] === this.respuestas[i]) {
+                    this.aciertos ++;
+                    this.aciertoPorPregunta.push(true);                     
+                }else{
+                    this.aciertoPorPregunta.push(false);
                 }
+            }       
+            this.calificarAciertosPorMateria();  
+        },
+        calificarAciertosPorMateria(){
+            let aciertosTmp = []
+            for (let materia of this.examen.materias) {
+                let aciertosMateria = this.aciertoPorPregunta.
+                    slice(materia.inicio-1,materia.fin);
+                let materiaAciertos = aciertosMateria.filter(acierto => {
+                    return acierto === true
+                });
+                aciertosTmp.push(materiaAciertos.length);
+            }
+            for (const it in this.aciertosPorMateria) {
+                this.aciertosPorMateria[it].aciertos = aciertosTmp[it] ;
             }
             for (const aciertosM of this.aciertosPorMateria) {
-                aciertosM. porcentaje = (aciertosM.aciertos/aciertosM.numReactivos)*100;
-            }            
+                aciertosM.porcentaje = (aciertosM.aciertos/
+                aciertosM.numReactivos)*100;
+            }   
         },
         datosAlumnoForm(){
-            if (this.datosAlumno.nombre.length < 3 && this.datosAlumno.apellidos < 5 ) {
+            if (this.datosAlumno.nombre.length < 3 && 
+            this.datosAlumno.apellidos < 5 ) {
                 return false;
             }
             return true;
@@ -190,16 +200,14 @@ export default {
             if (this.dimensionRespuestas === this.examen.numReactivos) {
                 return true;
             }
-            return false;
+            //return false;
+            return true
         },
         rellenar(){
             for (const i in this.respuestas) {
                 let random = Math.floor(Math.random() * 4)+1;
                 this.respuestas[i] = String.fromCharCode(64+random)
             }
-            console.log(this.respuestas);
-            console.log(this.examen);
-            
         }
     }
 }
