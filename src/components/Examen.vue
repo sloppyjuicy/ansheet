@@ -16,6 +16,9 @@
                 <input type="text" class="form-control" placeholder="Apellidos" 
                 v-model="datosAlumno.apellidos">
                 </div>
+                <div class="col-md-6 col-sm-12">
+                    <button @click="rellenar" class="btn btn-outline-primary">Rellenar</button>
+                </div>
             </div>
         </form>
         <div v-else>
@@ -81,6 +84,15 @@ export default {
     props:[
         'examen'
     ],
+    computed:{
+        dimensionRespuestas(){
+            let dimension = this.respuestas.filter((respuesta)=>{
+                return respuesta !== ""
+            }).length
+
+            return dimension;
+        }
+    },
     data(){
         return {
             //examen : examen1,
@@ -110,7 +122,6 @@ export default {
            }
            this.aciertosPorMateria.push(tmp);
        }
-       console.log("Entro a created");
         // Validar si se cargo bien el examen.   
     },
     beforeDestroy(){
@@ -148,18 +159,18 @@ export default {
             
         },
         calificarExamen(){
-            console.log(this.aciertosPorMateria);
+            let iterator = 0;
             for (let i = 0; i < this.examen.respuestas.length; i++) {
                 if (this.respuestas[i] !== ''){
                     if (this.examen.respuestas[i] === this.respuestas[i]) {
                         this.aciertos ++;
                         this.aciertoPorPregunta.push(true);
-                        for (let j = 0; j < this.examen.materias.length; j++) {
-                            if (i >= this.examen.materias[j].inicio - 1 && 
-                                i<=this.examen.materias[j].fin -1 ) {
-                                this.aciertosPorMateria[j].aciertos ++;
-                            }                            
-                        }
+                        this.aciertosPorMateria[iterator].aciertos++;
+                        // Este es un buen acercamiento pero falla porque JS es async
+                        if (i + 1 >= this.examen.materias[iterator].fin) {
+                            iterator++;
+                            console.log("Changing iterator", iterator,i+1);
+                        }                            
                     }else{
                         this.aciertoPorPregunta.push(false);
                     }
@@ -176,24 +187,21 @@ export default {
             return true;
         },
         todasLasPreguntasContestadas(){
-            console.log(this.dimensionRespuestas,this.examen.numReactivos);
-            
             if (this.dimensionRespuestas === this.examen.numReactivos) {
                 return true;
             }
             return false;
-        }
-    },
-    computed:{
-        dimensionRespuestas(){
-            let dimension = this.respuestas.filter((respuesta)=>{
-                return respuesta !== ""
-            }).length
-
-            return dimension;
+        },
+        rellenar(){
+            for (const i in this.respuestas) {
+                let random = Math.floor(Math.random() * 4)+1;
+                this.respuestas[i] = String.fromCharCode(64+random)
+            }
+            console.log(this.respuestas);
+            console.log(this.examen);
+            
         }
     }
-
 }
 </script>
 
