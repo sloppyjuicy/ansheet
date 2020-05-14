@@ -11,7 +11,8 @@ import NotFound from './components/NotFound'
 import Welcome from './components/Welcome'
 import Examen from './components/Examen'
 
-import examenComipems from './canswers/unam2013comipems.json';
+/*import examenComipems from './canswers/unam2013comipems.json';*/
+import examenComipems from './canswers/unam2015comipems.json';
 import examenUniversidad from './canswers/ipn01unido.json';
 
 Vue.config.productionTip = false
