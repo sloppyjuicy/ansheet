@@ -51,13 +51,13 @@
                         <li>
                             <div v-for="n in examen.numOpciones" :key="n" class="d-inline mr-1">
                                 <label class="mr-1">{{String.fromCharCode(64+n)}}</label>
-                                <input type="radio" :name="'test-'+i" :disabled="examenTerminado" 
+                                <input type="radio" :name="'test-'+i" :disabled="examenTerminado || answers" 
                                 :value="String.fromCharCode(64+n)" 
                                 v-model="respuestas[i-1]" v-if="respuestas" >
                             </div>
                             <label v-if="examenTerminado && aciertoPorPregunta[i-1]">&#x2714;</label>
                             <label v-if="examenTerminado && !aciertoPorPregunta[i-1]">&#x2718;</label>
-                            <label class="ml-1" v-if="debug"><small>{{examen.respuestas[i-1]}}</small></label>
+                            <label class="ml-1" v-if="showAnswers"><small>{{examen.respuestas[i-1]}}</small></label>
                         </li>
                     </div>
                     
@@ -85,6 +85,21 @@ export default {
             }).length
 
             return dimension;
+        },
+        debug(){
+            return this.mode === "debug"
+        },
+        master(){
+            return this.mode === "master"
+        },
+        answers(){
+            return this.mode === "answers"
+        },
+        showAnswers(){
+            if (this.examenTerminado) {
+                return this.master || this.debug
+            } 
+            return false
         }
     },
     data(){
@@ -97,7 +112,8 @@ export default {
             aciertos : 0,
             aciertosPorMateria: [],
             aciertoPorPregunta :[],
-            debug: this.$route.params.debug === "true" ? true : false || false
+            //debug: this.$route.params.debug === "true" ? true : false || false
+            mode: this.$route.params.debug 
         }
     },
     created(){
@@ -124,6 +140,11 @@ export default {
                 this.respuestas[i] = String.fromCharCode(64+random)
             }
             this.datosAlumno.nombre = 'Francesco Paolo'
+        }
+        if (this.answers === true ){
+            for (const i in this.respuestas) {
+                this.respuestas[i] = this.examen.respuestas[i]
+            }
         }
     },
     beforeDestroy(){
