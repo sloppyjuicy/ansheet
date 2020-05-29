@@ -12,9 +12,6 @@
                 <input type="text" class="form-control" placeholder="Nombre" 
                 v-model="datosAlumno.nombre" >
                 </div>
-                <!--div class="col-md-6 col-sm-12" v-if="debug">
-                    <button @click="rellenar" class="btn btn-outline-primary">Rellenar</button>
-                </div-->
             </div>
         </form>
         <div v-else>
@@ -60,7 +57,7 @@
                             </div>
                             <label v-if="examenTerminado && aciertoPorPregunta[i-1]">&#x2714;</label>
                             <label v-if="examenTerminado && !aciertoPorPregunta[i-1]">&#x2718;</label>
-                            <!--label class="ml-1" v-if="debug">{{examen.respuestas[i-1]}}</label-->
+                            <label class="ml-1" v-if="debug"><small>{{examen.respuestas[i-1]}}</small></label>
                         </li>
                     </div>
                     
@@ -120,7 +117,7 @@ export default {
            }
            this.aciertosPorMateria.push(tmp);
         }
-        // Validar si se cargo bien el examen.   
+        //TODO:- Validar si se cargo bien el examen.   
         if (this.debug === true ){
             for (const i in this.respuestas) {
                 let random = Math.floor(Math.random() * 4)+1;

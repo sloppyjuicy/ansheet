@@ -13,7 +13,8 @@ import Examen from './components/Examen'
 
 /*import examenComipems from './canswers/unam2013comipems.json';*/
 /*import examenComipems from './canswers/unam2015comipems.json';*/
-import examenComipems from './canswers/unam2017comipems.json';
+/*import examenComipems from './canswers/unam2017comipems.json';*/
+import examenComipems from './canswers/unam2019comipems.json';
 /*import examenUniversidad from './canswers/ipn01unido.json';*/
 import examenUniversidad from './canswers/ipn01unido2.json';
 
