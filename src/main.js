@@ -4,10 +4,14 @@ import App from './App.vue'
 import VueRouter from 'vue-router'
 import VueIziToast from 'vue-izitoast'
 import { firestorePlugin } from 'vuefire'
+import { BootstrapVue, IconsPlugin } from 'bootstrap-vue'
 
 import 'bootstrap'
-import 'bootstrap/dist/css/bootstrap.min.css'
+//import 'bootstrap/dist/css/bootstrap.min.css'
 import "izitoast/dist/css/iziToast.css";
+
+import 'bootstrap/dist/css/bootstrap.css'
+import 'bootstrap-vue/dist/bootstrap-vue.css'
 
 import NotFound from './components/NotFound'
 import Welcome from './components/Welcome'
@@ -60,6 +64,11 @@ const router = new VueRouter({
 Vue.use(VueRouter)
 Vue.use(VueIziToast);
 Vue.use(firestorePlugin);
+
+// Install BootstrapVue
+Vue.use(BootstrapVue)
+// Optionally install the BootstrapVue icon components plugin
+Vue.use(IconsPlugin)
 
 new Vue({
   render: h => h(App),

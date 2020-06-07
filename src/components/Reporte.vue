@@ -11,25 +11,23 @@
             </div>
         </div>
         <div class="row">
-            <div class="col-3">
-                <div class="list-group" id="list-tab" role="tablist">
-                <a class="list-group-item list-group-item-action active" id="list-home-list" 
-                    data-toggle="list" href="#list-home" role="tab" aria-controls="home">Rodrigo Francisco</a>
-                <a class="list-group-item list-group-item-action" id="list-profile-list" 
-                    data-toggle="list" href="#list-profile" role="tab" aria-controls="profile">Ulises Ortiz</a>
-                <a class="list-group-item list-group-item-action" id="list-messages-list" 
-                    data-toggle="list" href="#list-messages" role="tab" aria-controls="messages">Mike Francisco</a>
-                <a class="list-group-item list-group-item-action" id="list-settings-list" 
-                    data-toggle="list" href="#list-settings" role="tab" aria-controls="settings">Carlos Ramírez</a>
-                </div>
-            </div>
-            <div class="col-9">
-                <div class="tab-content" id="nav-tabContent">
-                    <div class="tab-pane fade show active" id="list-home" role="tabpanel" aria-labelledby="list-home-list">...</div>
-                    <div class="tab-pane fade" id="list-profile" role="tabpanel" aria-labelledby="list-profile-list">...</div>
-                    <div class="tab-pane fade" id="list-messages" role="tabpanel" aria-labelledby="list-messages-list">...</div>
-                    <div class="tab-pane fade" id="list-settings" role="tabpanel" aria-labelledby="list-settings-list">...</div>
-                </div>
+            <div class="col-md-12">
+              <b-card no-body>
+                <b-tabs pills card vertical>
+                    <b-tab title="Welcome">
+                        Hello
+                    </b-tab>
+                    <b-tab :title="resultado.nombre_alumno" v-for="resultado in resultados" 
+                        :key="resultado.id" @click="cargarChart(resultado.id)">
+                        <!--b-card-text>{{resultado.id}}</b-card-text-->
+                        <div class="row">
+                            <div class="col-md-12">
+                                <canvas :id="resultado.id"></canvas>
+                            </div>
+                        </div>
+                    </b-tab>
+                </b-tabs>
+            </b-card>
             </div>
         </div>
     </div>
@@ -41,23 +39,28 @@ import Chart from 'chart.js'
 export default {
     data(){
         return {
-            puntajes : [],
             resultados :[],
+            puntajes : [70, 81, 67, 102, 50, 38]
         }    
     },
-    mounted(){
-        /*this.cargarChart()*/
-    },
     methods:{
-        cargarChart(){
-            let ctx = document.getElementById('myChart');
+        cargarChart(id){
+            // Hacer consultas y finalmente gráficar!!
+            /*let docRef = db.collection('resultados')
+                .doc('1ZNL5V2WBqmes2UJmL1r')
+                .collection('examenes')
+                .doc('s4GV0UHZvlfp4iSXFnrK').get()
+            docRef.then(doc => {
+                console.log(doc.data());
+            })*/
+            let ctx = document.getElementById(id);
             let myChart = new Chart(ctx, {
                 type: 'bar',
                 data: {
                     labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
                     datasets: [{
-                        label: '# of Votes',
-                        data: [12, 19, 3, 5, 2, 3],
+                        label: 'Exámenes',
+                        data: this.puntajes,
                         backgroundColor: [
                             'rgba(255, 99, 132, 0.2)',
                             'rgba(54, 162, 235, 0.2)',
@@ -88,10 +91,14 @@ export default {
                 }
             });
             console.log(myChart);
+        },
+        debugin(){
+            console.log("Funcionaaa");
+            this.cargarChart()
+            
         }
     },
     firestore:{
-        puntajes : db.collection('puntajes'),
         resultados : db.collection('resultados'),
     },
 
