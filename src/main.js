@@ -1,7 +1,9 @@
+import './firebase'
 import Vue from 'vue'
 import App from './App.vue'
 import VueRouter from 'vue-router'
 import VueIziToast from 'vue-izitoast'
+import { firestorePlugin } from 'vuefire'
 
 import 'bootstrap'
 import 'bootstrap/dist/css/bootstrap.min.css'
@@ -10,6 +12,7 @@ import "izitoast/dist/css/iziToast.css";
 import NotFound from './components/NotFound'
 import Welcome from './components/Welcome'
 import Examen from './components/Examen'
+import Reporte from './components/Reporte'
 
 /*import examenComipems from './canswers/unam2013comipems.json';*/
 /*import examenComipems from './canswers/unam2015comipems.json';*/
@@ -42,6 +45,11 @@ const router = new VueRouter({
       }
     },
     {
+      path:'/reporte',
+      component: Reporte,
+      name: 'reporte'
+    },
+    {
       path : '*',
       component: NotFound
     }
@@ -51,6 +59,7 @@ const router = new VueRouter({
 
 Vue.use(VueRouter)
 Vue.use(VueIziToast);
+Vue.use(firestorePlugin);
 
 new Vue({
   render: h => h(App),

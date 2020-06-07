@@ -10,13 +10,16 @@
   "dependencies": {
     "axios": "^0.19.2",
     "bootstrap": "^4.5.0",
+    "chart.js": "^2.9.3",
     "core-js": "^3.6.5",
+    "firebase": "^7.15.0",
     "izitoast": "^1.4.0",
     "jquery": "^3.5.1",
     "popper.js": "^1.16.1",
     "vue": "^2.6.11",
     "vue-izitoast": "^1.2.1",
-    "vue-router": "^3.2.0"
+    "vue-router": "^3.2.0",
+    "vuefire": "^2.2.2"
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "~4.2.0",
