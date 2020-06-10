@@ -41,8 +41,12 @@ export default {
     data(){
         return {
             resultados :[],
-            materias_comipems : []
-            ,examenes_name : []
+            materias_comipems : [],
+            colors : [ 
+                'rgba(255, 99, 132, 0.2)', 
+                'rgba(255, 199, 70, 0.2)', 
+                'rgba(0, 99, 132, 0.2)'
+            ]
         }    
     },
     firestore:{
@@ -197,7 +201,7 @@ export default {
                     datasets: [{
                         label: 'Exámenes simulación',
                         data: puntajes,
-                        borderWidth: 1
+                        borderWidth: 1,
                     }]
                 },
                 options: {
@@ -219,7 +223,8 @@ export default {
                 let d = {
                     data : puntajes[i],
                     label : nombre_examenes[i],
-                    borderWidth : 1
+                    borderWidth : 1,
+                    backgroundColor: this.colors[i]
                 }
                 dataset.push(d)
             }
