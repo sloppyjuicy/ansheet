@@ -43,14 +43,15 @@ export default {
             resultados :[],
             materias_comipems : [],
             colors : [ 
-                'rgba(255, 99, 132, 0.2)', 
-                'rgba(255, 199, 70, 0.2)', 
-                'rgba(0, 99, 132, 0.2)'
+                'rgba(255, 99, 132, 0.5)', 
+                'rgba(255, 199, 70, 0.5)', 
+                'rgba(0, 99, 132, 0.5)',
+                'rgba(50, 20, 10, 0.5)', 
             ]
         }    
     },
     firestore:{
-        resultados : db.collection('resultados'),
+        resultados : db.collection('resultados').orderBy('nombre_alumno'),
         materias_comipems : db.collection('materias_comipems').orderBy('nombre_materia')
     },
 
