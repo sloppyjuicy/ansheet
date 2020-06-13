@@ -73,6 +73,8 @@
 
 <script>
 //import examen from "../canswers/unam2020area3.json";
+import {db} from '../firebase'
+import firebase from 'firebase/app'
 export default {
     name:'Examen',
     props:[
@@ -159,10 +161,47 @@ export default {
     methods :{
         terminar(){
             // Validar si lleno el nombre y si contesto todo
+
             if (this.datosAlumnoForm()) {
                 if (this.todasLasPreguntasContestadas() ) {
+                    // Preguntar si el id introducido es valido
                     this.calificarExamen();
                     this.examenTerminado = true;
+
+                    let examenSave = {
+                        nombre_examen : `${this.examen.area.toLowerCase()}-${this.examen.institucion.toLowerCase()}-${this.examen.annio}`,
+                        puntaje : this.aciertos,
+                        total : this.examen.numReactivos,
+                        fecha_aplicacion : firebase.firestore.Timestamp.fromDate(new Date())
+                        //fecha_aplicacion : new Date()
+                    };
+                    
+                    let puntaje_por_materia = [];
+
+                    for (const aciertosMateria of this.aciertosPorMateria) {
+                        let tmp = {
+                            materia : aciertosMateria.nombre,
+                            puntaje: aciertosMateria.aciertos,
+                            total: aciertosMateria.numReactivos
+                        }                       
+                        puntaje_por_materia.push(tmp) 
+                    }
+                    console.log(examenSave);
+                    console.log(puntaje_por_materia);
+
+                    let resAluRef = db.collection('resultados').doc('DAQli0EicwO1kMfhX4Wm')
+
+                    resAluRef.collection('examenes').doc(examenSave.nombre_examen).set(examenSave).then(function() {
+                        console.log("Document successfully written!");
+                    })
+
+                    for (const m of puntaje_por_materia) {
+                        resAluRef.collection('examenes').doc(examenSave.nombre_examen)
+                        .collection('puntaje_por_materia').doc(m.materia).set(m).then( ()=>{
+                            console.log(`${m.materia} registrada correctamente`);
+                        });
+                    }
+                    
                 }else{
                     this.$toast.warning('Contesta todas las preguntas', 'OJO',{
                         icon: "icon-person",
