@@ -9,8 +9,8 @@
         <form class="pb-1 pt-2" v-if="!examenTerminado">
             <div class="row">
                 <div class="col-md-6 col-sm-12 mb-2">
-                <input type="text" class="form-control" placeholder="Nombre" 
-                v-model="datosAlumno.nombre" >
+                <input type="text" class="form-control" placeholder="ID del alumno" 
+                v-model="datosAlumno.id" >
                 </div>
             </div>
         </form>
@@ -110,12 +110,13 @@ export default {
             respuestas : null,
             datosAlumno :{
                 nombre : '',
+                id : '',
             },
             aciertos : 0,
             aciertosPorMateria: [],
             aciertoPorPregunta :[],
             //debug: this.$route.params.debug === "true" ? true : false || false
-            mode: this.$route.params.debug 
+            mode: this.$route.params.debug,
         }
     },
     created(){
@@ -159,48 +160,69 @@ export default {
         //delete this.respuestas
     },
     methods :{
+        calificarYGuardar(userDocId){
+            this.calificarExamen();
+            this.examenTerminado = true;
+
+            let examenSave = {
+                nombre_examen : `${this.examen.area.toLowerCase()}-${this.examen.institucion.toLowerCase()}-${this.examen.annio}`,
+                puntaje : this.aciertos,
+                total : this.examen.numReactivos,
+                fecha_aplicacion : firebase.firestore.Timestamp.fromDate(new Date())
+                //fecha_aplicacion : new Date()
+            };
+            
+            let puntaje_por_materia = [];
+
+            for (const aciertosMateria of this.aciertosPorMateria) {
+                let tmp = {
+                    materia : aciertosMateria.nombre,
+                    puntaje: aciertosMateria.aciertos,
+                    total: aciertosMateria.numReactivos
+                }                       
+                puntaje_por_materia.push(tmp) 
+            }
+            console.log(examenSave);
+            console.log(puntaje_por_materia);
+
+            let resAluRef = db.collection('resultados').doc(userDocId)
+
+            resAluRef.collection('examenes').doc(examenSave.nombre_examen).set(examenSave).then(function() {
+                console.log("Document successfully written!");
+            })
+
+            for (const m of puntaje_por_materia) {
+                resAluRef.collection('examenes').doc(examenSave.nombre_examen)
+                .collection('puntaje_por_materia').doc(m.materia).set(m).then( ()=>{
+                    console.log(`${m.materia} registrada correctamente`);
+                });
+            }
+        },
         terminar(){
             // Validar si lleno el nombre y si contesto todo
 
             if (this.datosAlumnoForm()) {
                 if (this.todasLasPreguntasContestadas() ) {
                     // Preguntar si el id introducido es valido
-                    this.calificarExamen();
-                    this.examenTerminado = true;
-
-                    let examenSave = {
-                        nombre_examen : `${this.examen.area.toLowerCase()}-${this.examen.institucion.toLowerCase()}-${this.examen.annio}`,
-                        puntaje : this.aciertos,
-                        total : this.examen.numReactivos,
-                        fecha_aplicacion : firebase.firestore.Timestamp.fromDate(new Date())
-                        //fecha_aplicacion : new Date()
-                    };
-                    
-                    let puntaje_por_materia = [];
-
-                    for (const aciertosMateria of this.aciertosPorMateria) {
-                        let tmp = {
-                            materia : aciertosMateria.nombre,
-                            puntaje: aciertosMateria.aciertos,
-                            total: aciertosMateria.numReactivos
-                        }                       
-                        puntaje_por_materia.push(tmp) 
-                    }
-                    console.log(examenSave);
-                    console.log(puntaje_por_materia);
-
-                    let resAluRef = db.collection('resultados').doc('DAQli0EicwO1kMfhX4Wm')
-
-                    resAluRef.collection('examenes').doc(examenSave.nombre_examen).set(examenSave).then(function() {
-                        console.log("Document successfully written!");
-                    })
-
-                    for (const m of puntaje_por_materia) {
-                        resAluRef.collection('examenes').doc(examenSave.nombre_examen)
-                        .collection('puntaje_por_materia').doc(m.materia).set(m).then( ()=>{
-                            console.log(`${m.materia} registrada correctamente`);
+                    console.log(this.datosAlumno.id);
+                    db.collection('resultados').get().then( querySnapshot => {
+                        let userDocId = null
+                        querySnapshot.forEach( doc => {
+                            if (doc.get('alumno_id') == this.datosAlumno.id){
+                                userDocId = doc.id
+                                this.datosAlumno.nombre = doc.get('nombre_alumno')
+                            }
                         });
-                    }
+                        console.log(userDocId);
+                        if (userDocId !== null) {
+                            this.calificarYGuardar(userDocId)
+                        }else{
+                            this.$toast.warning('El usuario no existe', 'BAD',{
+                                icon: "icon-person",
+                                position: "topCenter",
+                            });
+                        }
+                    })
                     
                 }else{
                     this.$toast.warning('Contesta todas las preguntas', 'OJO',{
@@ -210,7 +232,7 @@ export default {
                 }
                 
             }else{
-                this.$toast.warning('Ingresa tu nombre completo', 'OJO',
+                this.$toast.warning('Ingresa un id válido', 'OJO',
                     {
                         icon: "icon-person",
                         position: "topCenter",
@@ -249,7 +271,7 @@ export default {
             }   
         },
         datosAlumnoForm(){
-            if (this.datosAlumno.nombre.length < 3 ) {
+            if (this.datosAlumno.id.length < 4 ) {
                 return false;
             }
             return true;

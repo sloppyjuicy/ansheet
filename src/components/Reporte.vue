@@ -14,6 +14,9 @@
                         :key="resultado.id" @click="verInfo(resultado.id)">
                         <div class="row">
                             <div class="col-md-12 text-center">
+                                <h4>{{resultado.nombre_alumno}} ({{resultado.alumno_id}})</h4>
+                            </div>
+                            <div class="col-md-12 text-center">
                                 <h3>Puntajes generales</h3>
                             </div>
                             <div class="col-md-12">

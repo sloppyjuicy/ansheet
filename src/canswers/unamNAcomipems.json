@@ -13,7 +13,7 @@
         "numReactivos" : 12
     },
     {
-        "nombre": "Habilidad Mat.",
+        "nombre": "Habilidad matemática",
         "inicio": 13,
         "fin": 28,
         "numReactivos" : 16
@@ -43,7 +43,7 @@
         "numReactivos" : 12
     },
     {
-        "nombre": "FORCE",
+        "nombre": "Force",
         "inicio": 77,
         "fin": 88,
         "numReactivos" : 12
@@ -61,7 +61,7 @@
         "numReactivos" : 12
     },
     {
-        "nombre": "Habilidad Verbal",
+        "nombre": "Habilidad verbal",
         "inicio": 113,
         "fin": 128,
         "numReactivos" : 16
