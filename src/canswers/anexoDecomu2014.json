@@ -1,0 +1,107 @@
+{
+  "institucion": "COMIPEMS",
+  "annio": null,
+  "area": null,
+  "tipo": "bachillerato",
+  "numOpciones": 5,
+  "numReactivos": 47,
+  "materias": [
+    {
+      "nombre": "Matemáticas",
+      "inicio": 1,
+      "fin": 8,
+      "numReactivos": 8
+    },
+    {
+      "nombre": "Biología",
+      "inicio": 9,
+      "fin": 16,
+      "numReactivos": 8
+    },
+    {
+      "nombre": "Física",
+      "inicio": 17,
+      "fin": 21,
+      "numReactivos": 5
+    },
+    {
+      "nombre": "Quimica",
+      "inicio": 22,
+      "fin": 26,
+      "numReactivos": 5
+    },
+    {
+      "nombre": "Geografía",
+      "inicio": 27,
+      "fin": 31,
+      "numReactivos": 5
+    },
+    {
+      "nombre": "Español",
+      "inicio": 32,
+      "fin": 36,
+      "numReactivos": 5
+    },
+    {
+      "nombre": "Historia",
+      "inicio": 37,
+      "fin": 42,
+      "numReactivos": 6
+    },
+    {
+      "nombre": "Formación Cívica y Ética",
+      "inicio": 43,
+      "fin": 47,
+      "numReactivos": 5
+    }
+  ],
+  "respuestas": [
+    "A",
+    "B",
+    "A",
+    "C",
+    "B",
+    "C",
+    "A",
+    "C",
+    "B",
+    "C",
+    "D",
+    "C",
+    "C",
+    "A",
+    "A",
+    "C",
+    "C",
+    "D",
+    "C",
+    "C",
+    "B",
+    "B",
+    "D",
+    "A",
+    "A",
+    "D",
+    "E",
+    "A",
+    "D",
+    "C",
+    "A",
+    "D",
+    "D",
+    "B",
+    "E",
+    "D",
+    "D",
+    "A",
+    "C",
+    "A",
+    "C",
+    "C",
+    "D",
+    "A",
+    "D",
+    "E",
+    "E"
+  ]
+}

@@ -54,9 +54,9 @@ multicol {
 /* Extra large devices (large laptops and desktops, 1200px and up) */
 @media only screen and (min-width: 1200px) {
   .multicol {
-    -webkit-columns: 100px 7; /* Chrome, Safari, Opera */
-    -moz-columns: 100px 7; /* Firefox */
-    columns: 100px 7;
+    -webkit-columns: 100px 6; /* Chrome, Safari, Opera */
+    -moz-columns: 100px 6; /* Firefox */
+    columns: 100px 6;
     -moz-column-fill: balance; /* Firefox */
     column-fill: balance;
   }

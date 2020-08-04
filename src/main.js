@@ -29,7 +29,8 @@ import Reporte from './components/Reporte'
 // import examenComipems from './canswers/unam2016comipems.json';
 // import examenComipems from './canswers/unam2012comipems.json'
 // import examenComipems from './canswers/COMIPEMS_simulacion.json'
-import examenComipems from './canswers/Comludo2020.json'
+// import examenComipems from './canswers/Comludo2020.json'
+import examenComipems from './canswers/comun2014masAnexo.json'
 
 /*import examenUniversidad from './canswers/ipn01unido.json';*/
 /*import examenUniversidad from './canswers/ipn01unido2.json';*/
