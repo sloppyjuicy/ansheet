@@ -2,6 +2,9 @@
 node_modules
 /dist
 
+# File token
+gen2020-2021-firebase.json
+
 # local env files
 .env.local
 .env.*.local

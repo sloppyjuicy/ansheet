@@ -109,33 +109,33 @@
 </template>
 
 <script>
-import { db } from '../firebase'
-import firebase from 'firebase/app'
+import { db } from '../firebase';
+import firebase from 'firebase/app';
 export default {
   name: 'Examen',
   props: ['examen'],
   computed: {
     dimensionRespuestas() {
       let dimension = this.respuestas.filter((respuesta) => {
-        return respuesta !== ''
-      }).length
+        return respuesta !== '';
+      }).length;
 
-      return dimension
+      return dimension;
     },
     debug() {
-      return this.mode === 'debug'
+      return this.mode === 'debug';
     },
     master() {
-      return this.mode === 'master'
+      return this.mode === 'master';
     },
     answers() {
-      return this.mode === 'answers'
+      return this.mode === 'answers';
     },
     showAnswers() {
       if (this.examenTerminado) {
-        return this.master || this.debug
+        return this.master || this.debug;
       }
-      return false
+      return false;
     },
   },
   data() {
@@ -151,12 +151,12 @@ export default {
       aciertoPorPregunta: [],
       //debug: this.$route.params.debug === "true" ? true : false || false
       mode: this.$route.params.debug,
-      type: this.examen.tipo === 'licenciatura' ? 'universidad' : 'resultados',
-    }
+      type: this.examen.tipo === 'licenciatura' ? 'universidad' : 'comipems',
+    };
   },
   created() {
-    console.log(this.type)
-    this.respuestas = new Array(this.examen.numReactivos).fill('')
+    console.log(this.type);
+    this.respuestas = new Array(this.examen.numReactivos).fill('');
     /*const {inicio,fin, ...tmp} = examen.materias[1]; 
             Es una buena solución para copiar un objeto sin algunas propiedades
             pero Vue JS no lo permite porque inicio y fin no se vuelven a ocupar.
@@ -169,36 +169,36 @@ export default {
         fin: materia.fin,
         aciertos: 0,
         porcentaje: 0,
-      }
-      this.aciertosPorMateria.push(tmp)
+      };
+      this.aciertosPorMateria.push(tmp);
     }
     //TODO:- Validar si se cargo bien el examen.
     if (this.debug === true) {
       for (const i in this.respuestas) {
-        let random = Math.floor(Math.random() * 4) + 1
-        this.respuestas[i] = String.fromCharCode(64 + random)
+        let random = Math.floor(Math.random() * 4) + 1;
+        this.respuestas[i] = String.fromCharCode(64 + random);
       }
-      this.datosAlumno.nombre = 'Francesco Paolo'
+      this.datosAlumno.nombre = 'Francesco Paolo';
     }
     if (this.answers === true) {
       for (const i in this.respuestas) {
-        this.respuestas[i] = this.examen.respuestas[i]
+        this.respuestas[i] = this.examen.respuestas[i];
       }
     }
   },
   beforeDestroy() {
-    this.examenTerminado = false
-    this.respuestas = null
-    this.aciertos = 0
-    this.aciertosPorMateria = []
-    this.aciertoPorPregunta = []
-    this.datosAlumno.nombre = ''
+    this.examenTerminado = false;
+    this.respuestas = null;
+    this.aciertos = 0;
+    this.aciertosPorMateria = [];
+    this.aciertoPorPregunta = [];
+    this.datosAlumno.nombre = '';
     //delete this.respuestas
   },
   methods: {
     calificarYGuardar(userDocId) {
-      this.calificarExamen()
-      this.examenTerminado = true
+      this.calificarExamen();
+      this.examenTerminado = true;
 
       let examenSave = {
         nombre_examen: this.nombreExamenBuilder(),
@@ -206,30 +206,30 @@ export default {
         total: this.examen.numReactivos,
         fecha_aplicacion: firebase.firestore.Timestamp.fromDate(new Date()),
         //fecha_aplicacion : new Date()
-      }
+      };
 
-      let puntaje_por_materia = []
+      let puntaje_por_materia = [];
 
       for (const aciertosMateria of this.aciertosPorMateria) {
         let tmp = {
           materia: aciertosMateria.nombre,
           puntaje: aciertosMateria.aciertos,
           total: aciertosMateria.numReactivos,
-        }
-        puntaje_por_materia.push(tmp)
+        };
+        puntaje_por_materia.push(tmp);
       }
-      console.log(examenSave)
-      console.log(puntaje_por_materia)
+      console.log(examenSave);
+      console.log(puntaje_por_materia);
 
-      let resAluRef = db.collection(this.type).doc(userDocId)
+      let resAluRef = db.collection(this.type).doc(userDocId);
 
       resAluRef
         .collection('examenes')
         .doc(examenSave.nombre_examen)
         .set(examenSave)
         .then(function() {
-          console.log('Document successfully written!')
-        })
+          console.log('Document successfully written!');
+        });
 
       for (const m of puntaje_por_materia) {
         resAluRef
@@ -239,8 +239,8 @@ export default {
           .doc(m.materia)
           .set(m)
           .then(() => {
-            console.log(`${m.materia} registrada correctamente`)
-          })
+            console.log(`${m.materia} registrada correctamente`);
+          });
       }
     },
     terminar() {
@@ -248,94 +248,94 @@ export default {
       if (this.datosAlumnoForm()) {
         if (this.todasLasPreguntasContestadas()) {
           // Preguntar si el id introducido es valido
-          console.log(this.datosAlumno.id)
+          console.log(this.datosAlumno.id);
           db.collection(this.type)
             .get()
             .then((querySnapshot) => {
-              let userDocId = null
+              let userDocId = null;
               querySnapshot.forEach((doc) => {
                 if (doc.get('alumno_id') == this.datosAlumno.id) {
-                  userDocId = doc.id
-                  this.datosAlumno.nombre = doc.get('nombre_alumno')
+                  userDocId = doc.id;
+                  this.datosAlumno.nombre = doc.get('nombre_alumno');
                 }
-              })
-              console.log(userDocId)
+              });
+              console.log(userDocId);
               if (userDocId !== null) {
-                this.calificarYGuardar(userDocId)
+                this.calificarYGuardar(userDocId);
               } else {
                 this.$toast.warning('El usuario no existe', 'BAD', {
                   icon: 'icon-person',
                   position: 'topCenter',
-                })
+                });
               }
-            })
+            });
         } else {
           this.$toast.warning('Contesta todas las preguntas', 'OJO', {
             icon: 'icon-person',
             position: 'topCenter',
-          })
+          });
         }
       } else {
         this.$toast.warning('Ingresa un id válido', 'OJO', {
           icon: 'icon-person',
           position: 'topCenter',
-        })
+        });
       }
     },
     calificarExamen() {
-      let aciertos = 0
+      let aciertos = 0;
       for (let i = 0; i < this.examen.respuestas.length; i++) {
         if (this.examen.respuestas[i] === this.respuestas[i]) {
-          aciertos++
-          this.aciertoPorPregunta.push(true)
+          aciertos++;
+          this.aciertoPorPregunta.push(true);
         } else {
-          this.aciertoPorPregunta.push(false)
+          this.aciertoPorPregunta.push(false);
         }
       }
-      this.aciertos = aciertos
-      this.calificarAciertosPorMateria()
+      this.aciertos = aciertos;
+      this.calificarAciertosPorMateria();
     },
     calificarAciertosPorMateria() {
-      let aciertosTmp = []
+      let aciertosTmp = [];
       for (let materia of this.examen.materias) {
         let aciertosMateria = this.aciertoPorPregunta.slice(
           materia.inicio - 1,
-          materia.fin
-        )
+          materia.fin,
+        );
         let materiaAciertos = aciertosMateria.filter((acierto) => {
-          return acierto === true
-        })
-        aciertosTmp.push(materiaAciertos.length)
+          return acierto === true;
+        });
+        aciertosTmp.push(materiaAciertos.length);
       }
       for (const it in this.aciertosPorMateria) {
-        this.aciertosPorMateria[it].aciertos = aciertosTmp[it]
+        this.aciertosPorMateria[it].aciertos = aciertosTmp[it];
       }
       for (const aciertosM of this.aciertosPorMateria) {
         aciertosM.porcentaje =
-          (aciertosM.aciertos / aciertosM.numReactivos) * 100
+          (aciertosM.aciertos / aciertosM.numReactivos) * 100;
       }
     },
     datosAlumnoForm() {
       if (this.datosAlumno.id.length < 4) {
-        return false
+        return false;
       }
-      return true
+      return true;
     },
     todasLasPreguntasContestadas() {
       if (this.dimensionRespuestas === this.examen.numReactivos) {
-        return true
+        return true;
       }
-      return false
+      return false;
     },
     nombreExamenBuilder() {
       let area =
-        this.examen.area !== null ? this.examen.area.toLowerCase() : 'na'
+        this.examen.area !== null ? this.examen.area.toLowerCase() : 'na';
       return `${area}-${this.examen.institucion.toLowerCase()}-${
         this.examen.annio
-      }`
+      }`;
     },
   },
-}
+};
 </script>
 
 <style scoped>
