@@ -2,6 +2,8 @@
 node_modules
 /dist
 
+firebase-config.js
+anshetv2-5-firebase-admin.json
 
 # local env files
 .env.local
