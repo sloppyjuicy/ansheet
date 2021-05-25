@@ -1,6 +1,7 @@
 import Vue from "vue";
 import Vuex from "vuex";
-import { firebaseRepository } from "./firebaseRepository.js";
+import { exam } from "./firebase-repository/exam.js";
+import { students } from "./firebase-repository/students.js";
 
 Vue.use(Vuex);
 
@@ -9,6 +10,7 @@ export default new Vuex.Store({
   mutations: {},
   actions: {},
   modules: {
-    firebaseRepository,
+    exam,
+    students,
   },
 });
