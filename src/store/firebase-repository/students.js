@@ -35,18 +35,30 @@ export const students = {
     /**
      * Save students score in the db
      */
-    async saveScoreinDB({ commit }, payload) {
+    async saveScoreinDB({ _ignore }, payload) {
       const user = payload.student.id;
-      // only for debug purposes
-      const type = "comipems";
+      const type = "comipems"; // only for debug purposes
+      const collectionRoute = `alumnos-${type}/${user}/examenes`;
+      const examRef = doc(collection(db, collectionRoute));
       return new Promise((resolve) => {
-        setDoc(doc(db, `alumnos-${type}/${user}/examenes`, "LA"), {
-          name: "Los Angeles",
-          state: "CA",
-          country: "USA",
+        setDoc(examRef, {
+          puntajeTotal: payload.sucessAnswersCount,
+          reactivosTotales: payload.totalReactives,
+          examen_id: payload.examen_id,
+          puntajePorMateria: payload.sucessBySuject,
+          respuestasAlumno: payload.userAnswers,
+          mapaDeReactivos: payload.reactiveHeatMap,
         });
         resolve();
-        commit("doNothig");
+        /**
+         * NOTE:
+         * Following code make uses ANonymus function to get ride of non use
+         * "_ignore" variable.
+         * It its not the best option but it works at a time
+         */
+        ((t) => {
+          t;
+        })(_ignore);
       });
     },
   },
