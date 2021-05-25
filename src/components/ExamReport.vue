@@ -6,7 +6,7 @@
           Resultados {{ exam.institucion }} {{ exam.annio }}
           {{ exam.area }}
         </h3>
-        <h3>Rodrigo Francisco</h3>
+        <h3>{{ results.student.nombre }}</h3>
         <h5>
           Aciertos totales {{ results.sucessAnswersCount }}/{{
             exam.numReactivos
@@ -25,7 +25,7 @@
             ><b>{{ subject.nombre }}</b></span
           >
           <span>
-            {{ results.sucessBySuject[index] }} /{{
+            {{ results.sucessBySuject[index].puntaje }} /{{
               subjectTotalReactives(subject.inicio, subject.fin)
             }}</span
           >
@@ -33,7 +33,7 @@
             rounded
             :value="
               subjectProgress(
-                results.sucessBySuject[index],
+                results.sucessBySuject[index].puntaje,
                 subjectTotalReactives(subject.inicio, subject.fin)
               )
             "
@@ -44,14 +44,21 @@
       </v-col>
       <v-col lg="7" md="8" cols="12" class="multicol-narrowed">
         <ol>
-          <li
-            v-for="(r, n) in results.reactiveHeatMap"
-            :key="n"
-            :class="{ good: r }"
-          >
-            {{ results.userAnswers[n] }}
-            <b><span v-html="gradeSymbol(r, n)"></span></b>
-          </li>
+          <div v-for="(r, n) in results.reactiveHeatMap" :key="n">
+            <div
+              v-for="materia in exam.materias"
+              :key="materia.nombre"
+              class="subjectStyle"
+            >
+              <span v-if="n + 1 == materia.inicio">
+                <b>{{ shortName(materia.nombre) }}</b></span
+              >
+            </div>
+            <li :class="{ good: r }">
+              {{ results.userAnswers[n] }}
+              <b><span v-html="gradeSymbol(r, n)"></span></b>
+            </li>
+          </div>
         </ol>
       </v-col>
     </v-row>
@@ -71,6 +78,9 @@ export default {
     },
     gradeSymbol(state, index) {
       return state === true ? "&#x2714" : this.exam.respuestas[index];
+    },
+    shortName(string) {
+      return string.slice(0, 8) + "..";
     },
   },
 };
@@ -121,5 +131,11 @@ export default {
 }
 .good {
   color: green;
+}
+
+.subjectStyle {
+  font-variant: small-caps;
+  margin-left: -25px;
+  font-size: 12px;
 }
 </style>

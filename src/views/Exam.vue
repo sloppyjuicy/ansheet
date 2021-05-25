@@ -21,6 +21,7 @@
       <answer-sheet
         v-if="finished === false"
         :exam="exam"
+        :students="students"
         @showError="showSnackMessage"
         @displayGrades="setReportData"
       />
@@ -44,19 +45,24 @@ export default {
     messageAlert: "",
     finished: false,
     examID: "faTusRgcmgf9UuhSrmnO",
+    examType: "universidad",
     resultData: {},
   }),
   computed: {
     /**
      * VUEX import methods
      */
-    ...mapGetters({ exam: "getExam" }),
+    ...mapGetters({ exam: "getExam", students: "getStudents" }),
   },
   methods: {
     /**
      * VUEX import methods
      */
-    ...mapActions({ getExam: "getExamFromDB" }),
+    ...mapActions({
+      getExam: "getExamFromDB",
+      getStudents: "getStudentsFromDB",
+      saveExam: "saveScoreinDB",
+    }),
     /**
      * Component methods
      */
@@ -66,11 +72,23 @@ export default {
     },
     setReportData(payload) {
       this.resultData = payload;
-      this.finished = true;
+      this.saveExam(payload)
+        .then(() => {
+          this.showSnackMessage("Guardado con éxito");
+          this.finished = true;
+        })
+        .catch((error) => {
+          this.showSnackMessage("Problemas al guardar en la base de datos");
+          this.finished = true;
+          console.log(error);
+        });
     },
   },
   created() {
-    this.getExam(this.examID);
+    this.getExam({ type: this.examType, examID: this.examID });
+    // this.getStudents({ type: this.examType });
+    // FOR TESTING PURPOSES
+    this.getStudents({ type: "comipems" });
   },
 };
 </script>

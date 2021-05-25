@@ -22,7 +22,14 @@
         </h2>
       </v-col>
       <v-col lg="4" md="4" sm="12" cols="12" class="d-flex align-center">
-        <v-text-field label="ID del alumno" v-model="alumnoID"></v-text-field>
+        <v-select
+          v-if="students"
+          :items="students"
+          item-text="nombre"
+          item-value="alumno_id"
+          v-model="studentSelected"
+          label="Alumno"
+        ></v-select>
       </v-col>
     </v-row>
     <v-row v-if="reactivos">
@@ -57,9 +64,9 @@
 <script>
 export default {
   name: "AnswerSheet",
-  props: ["exam"],
+  props: ["exam", "students"],
   data: () => ({
-    alumnoID: "",
+    studentSelected: null,
     reactivos: [],
   }),
   computed: {
@@ -73,9 +80,9 @@ export default {
   },
   methods: {
     validate() {
-      // Validate ID length
-      if (this.alumnoID.length < 4) {
-        return { state: false, message: "Ingrese un identificador Válido" };
+      // Validate selected student
+      if (!this.studentSelected) {
+        return { state: false, message: "Seleccione un estudiante" };
       }
       // Validate ALL reactives are check
       const unfillReactives = [];
@@ -126,12 +133,38 @@ export default {
           subjectIndex++;
         }
       }
+      const sucessBySujectFormated = this.formatsucessBySuject(sucessBySuject);
       this.$emit("displayGrades", {
         sucessAnswersCount,
         reactiveHeatMap,
-        sucessBySuject,
+        sucessBySuject: sucessBySujectFormated,
         userAnswers: this.reactivos,
+        student: this.getStudentById(this.studentSelected),
+        examen_id: this.exam.examen_id,
+        totalReactives: this.exam.numReactivos,
       });
+    },
+    formatsucessBySuject(gradesBysubject) {
+      let subjectsGrades = [];
+      this.exam.materias.forEach((s, index) => {
+        subjectsGrades.push({
+          clave: s.clave,
+          nombre: s.nombre,
+          puntaje: gradesBysubject[index],
+          total: s.fin - s.inicio + 1,
+        });
+      });
+      return subjectsGrades;
+    },
+    getStudentById(id) {
+      const s = this.students.filter((s) => {
+        return s.alumno_id == id;
+      });
+      if (s.length === 1) {
+        return s[0];
+      } else {
+        return {};
+      }
     },
     // FOLLOWING CODE IS ONLY FOR TESTING PURPOSES
     TESTING_randomReactives() {
