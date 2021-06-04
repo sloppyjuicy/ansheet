@@ -7,10 +7,9 @@
 
 const admin = require("firebase-admin");
 
-// Following import is always changing 
+// Following import is always changing
 // on the examen we want to upload
 const { exam } = require("./exams-answers/faker.js");
-
 
 /******************************************************************************
  **********                    Auxiliar functions                  ************
@@ -33,50 +32,64 @@ const hasAllProperties = (obj, properties) => {
  * This function makes sure 'fin' > 'inicio'
  */
 const startLessThanEnd = (exam) => {
-  for ( let i = 0; i < exam.materias.length; i++ ) {
-    if ( exam.materias[i].inicio >= exam.materias[i].fin ) {
+  for (let i = 0; i < exam.materias.length; i++) {
+    if (exam.materias[i].inicio >= exam.materias[i].fin) {
       return true;
     }
   }
   return false;
-}
+};
 
-/** 
+/**
  * Check if 'inicio' and 'fin' from differnet items ('materias') doesnt overlap
  * It is require to have the array order by 'inicio'
  */
 const limitOverlapping = (exam) => {
-  for ( let i = 0; i < exam.materias.length - 1; i++ ) {
-    if ( exam.materias[i].fin >= exam.materias[i+1].inicio ) {
+  for (let i = 0; i < exam.materias.length - 1; i++) {
+    if (exam.materias[i].fin >= exam.materias[i + 1].inicio) {
       return true;
     }
   }
   return false;
-}
+};
 
 /**
- * Depending on the exam type ('bachillerato' or 'universidad') 
+ * Depending on the exam type ('comipems' or 'universidad')
  * this function makes sure that the keys are valide.
  */
 const areKeysValid = (exam) => {
-  for (materia of exam.materias ) {
-    if ( exam.tipo === "bachillerato" ) {
-      if ( keysForTypeBachillerato.includes(materia.clave) === false ) {
+  for (materia of exam.materias) {
+    if (exam.tipo === "comipems") {
+      if (keysForTypeComipems.includes(materia.clave) === false) {
         return false;
       }
-    } else if ( exam.tipo === "universidad" ) {
-      if ( keysForTypeUniversidad.includes(materia.clave) === false ) {
+    } else if (exam.tipo === "universidad") {
+      if (keysForTypeUniversidad.includes(materia.clave) === false) {
         return false;
       }
-
     } else {
       console.log("Tipo inválido");
       return false;
     }
   }
-  return true
-}
+  return true;
+};
 
+const buildExamName = (exam) => {
+  if (exam.institucion === null) {
+    return "examen-simulacion";
+  }
+  let name = `${exam.institucion}`;
+  if (exam.annio != null) {
+    name = name + `-${exam.annio}`;
+  } else {
+    name = name + "-simulacion";
+  }
+  if (exam.area != null) {
+    name = name + `-${exam.area}`;
+  }
+  return name;
+};
 
 /******************************************************************************
  **********             Validations for exam object                ************
@@ -94,7 +107,7 @@ const examProperties = [
   "respuestas",
 ];
 
-if ( hasAllProperties(exam,examProperties) === false ) {
+if (hasAllProperties(exam, examProperties) === false) {
   console.log("Wrong EXAM attributes");
   console.log("the EXAM must have the following attributes");
   console.log(examProperties);
@@ -103,41 +116,40 @@ if ( hasAllProperties(exam,examProperties) === false ) {
   console.log("Attributes list is OK");
 }
 
-
 // 2) numReactivos === respuestas.length
-if ( exam.numReactivos !== exam.respuestas.length ) {
+if (exam.numReactivos !== exam.respuestas.length) {
   console.log("Wrong num of EXAM length of 'respuestas' attribute");
   console.log(`numReactivos: ${exam.numReactivos}`);
   console.log(`length of 'respuestas': ${exam.respuestas.length}`);
   process.exit(1);
 } else {
-  console.log("Length of 'respuestas' is OK")
+  console.log("Length of 'respuestas' is OK");
 }
 
 // 3) materias.inicio must not overlap with any materias.fin
 
 // 3.5) materias.inicio < materias.fin
 // Sorting the array by 'inicio' property
-exam.materias = exam.materias.sort((m,n) => {
+exam.materias = exam.materias.sort((m, n) => {
   return m.inicio - n.inicio;
-}) 
+});
 
-if ( startLessThanEnd(exam) === true ) {
+if (startLessThanEnd(exam) === true) {
   console.log("In some item of 'materias' 'inicio' is greater than 'fin'");
   process.exit(1);
 }
 
-if ( limitOverlapping(exam) === true ) {
+if (limitOverlapping(exam) === true) {
   console.log("Some limits are overlapping in 'materias'");
   process.exit(1);
 } else {
-  console.log("'inicio' and 'fin' limits are OK")
+  console.log("'inicio' and 'fin' limits are OK");
 }
 
 // 4) Validate 'clave' depending on 'tipo' attribute
-// 
-// Validate 'clave's for 'tipo' = bachillerato
-const keysForTypeBachillerato = [
+//
+// Validate 'clave's for 'tipo' = comipems
+const keysForTypeComipems = [
   "hab-matematica",
   "biologia",
   "espanol",
@@ -147,7 +159,7 @@ const keysForTypeBachillerato = [
   "hab-verbal",
   "geografia",
   "fisica",
-  "force"
+  "force",
 ];
 
 const keysForTypeUniversidad = [
@@ -160,17 +172,16 @@ const keysForTypeUniversidad = [
   "hab-verbal",
   "geografia",
   "fisica",
-  "literatura"
+  "literatura",
   //"razonamiento"
 ];
 
-if ( areKeysValid(exam) === false ) {
+if (areKeysValid(exam) === false) {
   console.log("The 'clave' register in some item of 'materia' is incorrect");
   process.exit(1);
 } else {
-  console.log("All 'clave's seems OK")
+  console.log("All 'clave's seems OK");
 }
-
 
 /******************************************************************************
  **********               UPLOADING exam object                    ************
@@ -189,12 +200,25 @@ const db = admin.firestore();
 
 // THE FOLLOWING CODE WORKS PRETTY WELL
 // BUT IS COMMENTED TO KEEP WORKING ON VALIDATIONS
-//
-//db.collection("examenes-universidad").add(exam)
-  //.then( (docRef) => {
-    //console.log(`El documento con id ${docRef.id} se inserto correctamente`);
-  //})
-  //.catch( (error) => {
-    //console.log(`El documento no pudo ser insertado`);
-    //console.log(error)
-  //})
+
+let collectionName = "examenes-";
+if (exam.tipo == "comipems") {
+  collectionName = collectionName + "comipems";
+} else if (exam.tipo == "universidad") {
+  collectionName = collectionName + "universidad";
+} else {
+  console.log("Error: Tipo de examen incorrecto");
+}
+
+// Ading name to exam base on the properties
+exam.nombre = buildExamName(exam);
+
+db.collection(collectionName)
+  .add(exam)
+  .then((docRef) => {
+    console.log(`El documento con id ${docRef.id} se inserto correctamente`);
+  })
+  .catch((error) => {
+    console.log(`El documento no pudo ser insertado`);
+    console.log(error);
+  });
