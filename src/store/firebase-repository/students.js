@@ -7,15 +7,29 @@ import { doc, setDoc } from "firebase/firestore";
 export const students = {
   state: () => ({
     students: null,
+    studentExams: null,
+    studentID: null,
   }),
   getters: {
     getStudents(state) {
       return state.students;
     },
+    getStudentExams(state) {
+      return state.studentExams;
+    },
+    getStudentID(state) {
+      return state.studentID;
+    },
   },
   mutations: {
     setStudents(state, students) {
       state.students = students;
+    },
+    setStudentExams(state, payload) {
+      state.studentExams = payload;
+    },
+    setStudentID(state, id) {
+      state.studentID = id;
     },
   },
   actions: {
@@ -37,7 +51,7 @@ export const students = {
      */
     async saveScoreinDB({ _ignore }, payload) {
       const user = payload.student.id;
-      const type = "comipems"; // only for debug purposes
+      const type = payload.type;
       const collectionRoute = `alumnos-${type}/${user}/examenes`;
       const examRef = doc(collection(db, collectionRoute));
       return new Promise((resolve) => {
@@ -45,6 +59,7 @@ export const students = {
           puntajeTotal: payload.sucessAnswersCount,
           reactivosTotales: payload.totalReactives,
           examen_id: payload.examen_id,
+          nombre_examen: payload.exam_name,
           puntajePorMateria: payload.sucessBySuject,
           respuestasAlumno: payload.userAnswers,
           mapaDeReactivos: payload.reactiveHeatMap,
@@ -59,6 +74,43 @@ export const students = {
         ((t) => {
           t;
         })(_ignore);
+      });
+    },
+    async getStudentExamFromDB({ commit }, payload) {
+      const user = payload.student_id;
+      const type = payload.type;
+      const collectionRoute = `alumnos-${type}/${user}/examenes`;
+      const se = [];
+      const q = query(collection(db, collectionRoute));
+      const querySnapshot = await getDocs(q);
+
+      return new Promise((resolve) => {
+        querySnapshot.forEach((doc) => {
+          // doc.data() is never undefined for query doc snapshots
+          se.push({ ...doc.data(), id: doc.id });
+        });
+        commit("setStudentExams", se);
+        resolve();
+      });
+    },
+    async getStudentDocumentIDFromIntegerID({ commit }, { id, type }) {
+      const collectionRoute = `alumnos-${type}`;
+      // TODO:- Refactor this query
+      const q = query(collection(db, collectionRoute));
+      const querySnapshot = await getDocs(q);
+      return new Promise((resolve) => {
+        let documentID = "";
+        querySnapshot.forEach((doc) => {
+          // doc.data() is never undefined for query doc snapshots
+          const data = doc.data();
+          console.log(data);
+          const integerId = data.alumno_id;
+          if (integerId === id) {
+            documentID = doc.id;
+          }
+        });
+        commit("setStudentID", documentID);
+        resolve();
       });
     },
   },

@@ -44,8 +44,8 @@ export default {
     snackVisibility: false,
     messageAlert: "",
     finished: false,
-    examID: "faTusRgcmgf9UuhSrmnO",
-    examType: "universidad",
+    examID: "g2GRBMRDa25m4wFWSuK5",
+    examType: "comipems",
     resultData: {},
   }),
   computed: {
@@ -72,7 +72,7 @@ export default {
     },
     setReportData(payload) {
       this.resultData = payload;
-      this.saveExam(payload)
+      this.saveExam({ ...payload, type: this.examType })
         .then(() => {
           this.showSnackMessage("Guardado con éxito");
           this.finished = true;
@@ -86,9 +86,7 @@ export default {
   },
   created() {
     this.getExam({ type: this.examType, examID: this.examID });
-    // this.getStudents({ type: this.examType });
-    // FOR TESTING PURPOSES
-    this.getStudents({ type: "comipems" });
+    this.getStudents({ type: this.examType });
   },
 };
 </script>

@@ -141,6 +141,7 @@ export default {
         userAnswers: this.reactivos,
         student: this.getStudentById(this.studentSelected),
         examen_id: this.exam.examen_id,
+        exam_name: this.exam.nombre,
         totalReactives: this.exam.numReactivos,
       });
     },
