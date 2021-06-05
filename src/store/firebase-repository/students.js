@@ -1,6 +1,6 @@
 import { db } from "../../../firebase-config.js";
 // IMPORT to READ data
-import { collection, query, getDocs } from "firebase/firestore";
+import { collection, query, getDocs, where } from "firebase/firestore";
 // IMPORT to WRITE data
 import { doc, setDoc } from "firebase/firestore";
 
@@ -96,18 +96,15 @@ export const students = {
     async getStudentDocumentIDFromIntegerID({ commit }, { id, type }) {
       const collectionRoute = `alumnos-${type}`;
       // TODO:- Refactor this query
-      const q = query(collection(db, collectionRoute));
+      const collectionRef = collection(db, collectionRoute);
+      const q = query(collectionRef, where("alumno_id", "==", id));
+
       const querySnapshot = await getDocs(q);
       return new Promise((resolve) => {
         let documentID = "";
         querySnapshot.forEach((doc) => {
           // doc.data() is never undefined for query doc snapshots
-          const data = doc.data();
-          console.log(data);
-          const integerId = data.alumno_id;
-          if (integerId === id) {
-            documentID = doc.id;
-          }
+          documentID = doc.id;
         });
         commit("setStudentID", documentID);
         resolve();

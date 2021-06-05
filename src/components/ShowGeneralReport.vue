@@ -18,11 +18,12 @@ import Chart from "chart.js/auto";
 import { mapGetters, mapActions } from "vuex";
 import { makeOptions } from "../../utils/chartOptions.js";
 export default {
-  name: "Report",
+  name: "ShowGeneralReport",
+  props: ["studentID", "type"],
   data: () => ({
-    type: "comipems",
+    // type: "comipems",
     // studentID: "4vVoif92VpDMtNUXma63",
-    studentID: "qntx83KqvsuGl1x9ZI6S",
+    // studentID: "qntx83KqvsuGl1x9ZI6S",
   }),
   computed: {
     ...mapGetters({ studentExams: "getStudentExams" }),

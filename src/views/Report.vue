@@ -30,6 +30,8 @@
     </v-row>
     <show-general-report
       @showError="showSnackMessage"
+      :studentID="id"
+      :type="type"
       v-if="showGeneralReport"
     />
   </v-container>
@@ -82,7 +84,12 @@ export default {
     getStudentReport() {
       this.getStudentID({ id: parseInt(this.studentID), type: this.type }).then(
         () => {
-          console.log(this.id);
+          if (this.id == "") {
+            this.showSnackMessage("Usuario no encontrado");
+          } else {
+            this.showSnackMessage("En un momento desplegaremos la info");
+            this.showGeneralReport = true;
+          }
         }
       );
     },
