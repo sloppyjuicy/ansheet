@@ -9,7 +9,7 @@ const admin = require("firebase-admin");
 
 // Following import is always changing
 // on the examen we want to upload
-const { exam } = require("./exams-answers/faker.js");
+const { exam } = require("./exams-answers/faker-universidad.js");
 
 /******************************************************************************
  **********                    Auxiliar functions                  ************
@@ -166,14 +166,16 @@ const keysForTypeUniversidad = [
   "biologia",
   "espanol",
   "quimica",
-  "hist-mex",
-  "hist-univ",
+  "hist-mexico",
+  "hist-universal",
   "matematicas",
   "hab-verbal",
   "geografia",
   "fisica",
   "literatura",
+  "filosofia"
   //"razonamiento"
+  //TODO:- Add IPN, UAM and other universities subjects
 ];
 
 if (areKeysValid(exam) === false) {
@@ -213,12 +215,12 @@ if (exam.tipo == "comipems") {
 // Ading name to exam base on the properties
 exam.nombre = buildExamName(exam);
 
-db.collection(collectionName)
-  .add(exam)
-  .then((docRef) => {
-    console.log(`El documento con id ${docRef.id} se inserto correctamente`);
-  })
-  .catch((error) => {
-    console.log(`El documento no pudo ser insertado`);
-    console.log(error);
-  });
+//db.collection(collectionName)
+  //.add(exam)
+  //.then((docRef) => {
+    //console.log(`El documento con id ${docRef.id} se inserto correctamente`);
+  //})
+  //.catch((error) => {
+    //console.log(`El documento no pudo ser insertado`);
+    //console.log(error);
+  //});
