@@ -1,38 +1,29 @@
 <template>
-  <v-container>
+  <div>
     <v-row>
       <v-col>
+        <h3>{{ student.nombre }}</h3>
+        <p><b>Sede: </b>{{ student.sede }}</p>
+      </v-col>
+      <v-col cols="12">
         <canvas id="general" width="400" height="200"></canvas>
       </v-col>
     </v-row>
     <v-row>
-      <v-col>
+      <v-col cols="12">
         <canvas id="bySubject" width="400" height="200"></canvas>
       </v-col>
     </v-row>
-  </v-container>
+  </div>
 </template>
 
 <script>
 import Chart from "chart.js/auto";
-import { mapGetters, mapActions } from "vuex";
 import { makeOptions } from "../../utils/chartOptions.js";
 export default {
   name: "ShowGeneralReport",
-  props: ["studentID", "type"],
-  data: () => ({
-    // type: "comipems",
-    // studentID: "4vVoif92VpDMtNUXma63",
-    // studentID: "qntx83KqvsuGl1x9ZI6S",
-  }),
-  computed: {
-    ...mapGetters({ studentExams: "getStudentExams" }),
-  },
+  props: ["studentExams", "student"],
   methods: {
-    /**
-     * VUEX import methods
-     */
-    ...mapActions({ getStudentExams: "getStudentExamFromDB" }),
     /**
      * component methods
      */
@@ -91,51 +82,50 @@ export default {
       return { genLabels, genScores };
     },
     getLabelsAndScoresBySubject(studentExams) {
-      let labels = studentExams[0].puntajePorMateria.map((m) => m.nombre);
+      // Sorting by subject name
+      let studentExamsSorted = [];
+      for (const se of studentExams) {
+        studentExamsSorted.push(
+          se.puntajePorMateria.sort((m, n) => {
+            if (m.clave > n.clave) return 1;
+            else if (m.clave < n.clave) return -1;
+            return 0;
+          })
+        );
+      }
+      // console.log(studentExamsSorted);
+      let labels = studentExamsSorted[0].map((m) => m.nombre);
       let scores = [];
-      for (const exam of studentExams) {
-        const tmpScores = exam.puntajePorMateria.map((m) => m.puntaje);
+      for (const exam of studentExamsSorted) {
+        const tmpScores = exam.map((m) => m.puntaje);
         scores.push(tmpScores);
       }
       return { labels, scores };
     },
   },
   mounted() {
-    /**
-     * 1)
-     * Get data from DB
-     * Process data as { label, data } array elements
-     * There are 2 types of data:
-     *    data for general score
-     *    data for subject score
-     */
-    this.getStudentExams({ student_id: this.studentID, type: this.type }).then(
-      () => {
-        if (this.studentExams.length > 0) {
-          // general scores
-          const { genLabels, genScores } = this.getGenLabelsAndScores(
-            this.studentExams
-          );
-          // scores by subjects
-          const { labels, scores } = this.getLabelsAndScoresBySubject(
-            this.studentExams
-          );
-          /**
-           * 2)
-           * Plot the information
-           */
-          this.loadCharts(genLabels, [genScores], "general", 128, [
-            "Aciertos generales",
-          ]);
-          this.loadCharts(labels, scores, "bySubject", 16, genLabels);
-        } else {
-          this.$emit(
-            "showError",
-            "Aún no hay información de este usuario en la BD"
-          );
-        }
-      }
-    );
+    if (this.studentExams.length > 0) {
+      // general scores
+      const { genLabels, genScores } = this.getGenLabelsAndScores(
+        this.studentExams
+      );
+      // scores by subjects
+      const { labels, scores } = this.getLabelsAndScoresBySubject(
+        this.studentExams
+      );
+      /**
+       * Plot the information
+       */
+      this.loadCharts(genLabels, [genScores], "general", 128, [
+        "Aciertos generales",
+      ]);
+      this.loadCharts(labels, scores, "bySubject", 16, genLabels);
+    } else {
+      this.$emit(
+        "showError",
+        "Aún no hay información de este usuario en la BD"
+      );
+    }
   },
 };
 </script>

@@ -9,6 +9,7 @@ export const students = {
     students: null,
     studentExams: null,
     studentID: null,
+    student: null,
   }),
   getters: {
     getStudents(state) {
@@ -20,6 +21,9 @@ export const students = {
     getStudentID(state) {
       return state.studentID;
     },
+    getStudent(state) {
+      return state.student;
+    },
   },
   mutations: {
     setStudents(state, students) {
@@ -30,6 +34,9 @@ export const students = {
     },
     setStudentID(state, id) {
       state.studentID = id;
+    },
+    setStudent(state, data) {
+      state.student = { nombre: data.nombre, sede: data.sede };
     },
   },
   actions: {
@@ -102,11 +109,14 @@ export const students = {
       const querySnapshot = await getDocs(q);
       return new Promise((resolve) => {
         let documentID = "";
+        let data = {};
         querySnapshot.forEach((doc) => {
           // doc.data() is never undefined for query doc snapshots
           documentID = doc.id;
+          data = doc.data();
         });
         commit("setStudentID", documentID);
+        commit("setStudent", data);
         resolve();
       });
     },

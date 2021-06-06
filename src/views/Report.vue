@@ -24,14 +24,18 @@
           append-outer-icon="mdi-send"
           label="Ingrese el ID del estudiante"
           type="text"
+          clear-icon="mdi-close-circle"
+          clearable
+          v-on:keyup.enter="pressedSendButton"
           @click:append-outer="pressedSendButton"
+          @click:clear="clearSearch"
         ></v-text-field>
       </v-col>
     </v-row>
     <show-general-report
       @showError="showSnackMessage"
-      :studentID="id"
-      :type="type"
+      :studentExams="studentExams"
+      :student="student"
       v-if="showGeneralReport"
     />
   </v-container>
@@ -52,17 +56,29 @@ export default {
     type: "comipems",
   }),
   computed: {
-    ...mapGetters({ id: "getStudentID" }),
+    ...mapGetters({
+      id: "getStudentID",
+      student: "getStudent",
+      studentExams: "getStudentExams",
+    }),
   },
   methods: {
     /**
      * VUEX import methods
      */
-    ...mapActions({ getStudentID: "getStudentDocumentIDFromIntegerID" }),
+    ...mapActions({
+      getStudentID: "getStudentDocumentIDFromIntegerID",
+      getStudentExams: "getStudentExamFromDB",
+    }),
     showSnackMessage(message) {
       this.messageAlert = message;
       this.snackVisibility = true;
     },
+    clearSearch() {
+      this.studentID = "";
+      this.showGeneralReport = false;
+    },
+
     isIDTextFieldValid(textID) {
       if (textID.length < 4) {
         return false;
@@ -74,6 +90,9 @@ export default {
       return true;
     },
     pressedSendButton() {
+      // First time the application is used is false.
+      // But then is to sure
+      this.showGeneralReport = false;
       // Make validations
       if (this.isIDTextFieldValid(this.studentID)) {
         this.getStudentReport();
@@ -87,8 +106,11 @@ export default {
           if (this.id == "") {
             this.showSnackMessage("Usuario no encontrado");
           } else {
-            this.showSnackMessage("En un momento desplegaremos la info");
-            this.showGeneralReport = true;
+            this.getStudentExams({ student_id: this.id, type: this.type }).then(
+              () => {
+                this.showGeneralReport = true;
+              }
+            );
           }
         }
       );
