@@ -1,5 +1,5 @@
 <template>
-  <v-container fluid>
+  <div>
     <!-- Alert message component -->
     <v-snackbar v-model="snackVisibility">
       {{ messageAlert }}
@@ -27,7 +27,7 @@
       />
       <exam-report v-else :exam="exam" :results="resultData" />
     </div>
-  </v-container>
+  </div>
 </template>
 <script>
 import ExamReport from "@/components/ExamReport.vue";
@@ -40,12 +40,13 @@ export default {
     ExamReport,
     AnswerSheet,
   },
+  props: ["examID", "examType"],
   data: () => ({
     snackVisibility: false,
     messageAlert: "",
     finished: false,
-    examID: "g2GRBMRDa25m4wFWSuK5",
-    examType: "comipems",
+    // examID: "g2GRBMRDa25m4wFWSuK5",
+    // examType: "comipems",
     resultData: {},
   }),
   computed: {

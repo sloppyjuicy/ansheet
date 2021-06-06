@@ -1,38 +1,30 @@
 <template>
-  <v-container>
-    <v-row class="justify-center mt-4">
-      <v-col cols="5" v-for="(curso, index) in cursos" :key="index">
-        <router-link
-          :to="{ path: '/examen' }"
-          style="text-decoration: none; color: inherit"
-        >
-          <v-card class="mx-auto">
-            <v-img
-              :src="require(`@/assets/${curso.imagen}`)"
-              height="300px"
-            ></v-img>
-            <v-card-title class="justify-center">
-              {{ curso.nombre }}
-            </v-card-title>
-          </v-card>
-        </router-link>
-      </v-col>
-    </v-row>
+  <v-container fluid>
+    <!-- <v-tabs color="deep-purple accent-4" right> -->
+    <v-tabs color="deep-purple accent-4">
+      <v-tab>COMIPEMS</v-tab>
+      <v-tab>Universidad</v-tab>
+
+      <v-tab-item :key="1">
+        <exam :examID="comipemsExamID" examType="comipems" />
+      </v-tab-item>
+      <v-tab-item :key="2">
+        <exam :examID="universidadExamID" examType="universidad" />
+      </v-tab-item>
+    </v-tabs>
   </v-container>
 </template>
 
 <script>
+import Exam from "@/components/Exam.vue";
 export default {
   name: "Home",
+  components: {
+    Exam,
+  },
   data: () => ({
-    cursos: [
-      {
-        nombre: "Universidad",
-        link: "as",
-        imagen: "math.jpg",
-      },
-      { nombre: "COMIPEMS", link: "as", imagen: "physics.jpg" },
-    ],
+    comipemsExamID: "g2GRBMRDa25m4wFWSuK5",
+    universidadExamID: "3pNWLwTZHjMMtxrCAARn",
   }),
 };
 </script>

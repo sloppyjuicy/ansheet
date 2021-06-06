@@ -1,7 +1,6 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
 import Home from "../views/Home.vue";
-import Exam from "@/views/Exam.vue";
 import Report from "@/views/Report.vue";
 
 Vue.use(VueRouter);
@@ -22,13 +21,8 @@ const routes = [
       import(/* webpackChunkName: "about" */ "../views/About.vue"),
   },
   {
-    path: "/examen",
-    name: "Exam",
-    component: Exam,
-  },
-  {
-    path: "/reporte/comipems",
-    name: "ReportComipems",
+    path: "/reporte",
+    name: "Reporte",
     component: Report,
   },
 ];

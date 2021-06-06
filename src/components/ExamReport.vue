@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="mt-5">
     <v-row>
       <v-col cols="12">
         <h3>
@@ -15,7 +15,7 @@
       </v-col>
     </v-row>
     <v-row>
-      <v-col lg="5" md="8" cols="12">
+      <v-col lg="5" md="5" cols="12">
         <div
           class="mb-2"
           v-for="(subject, index) in exam.materias"
@@ -42,7 +42,7 @@
           </v-progress-linear>
         </div>
       </v-col>
-      <v-col lg="7" md="8" cols="12" class="multicol-narrowed">
+      <v-col lg="7" md="7" cols="12" class="multicol-narrowed">
         <ol>
           <div v-for="(r, n) in results.reactiveHeatMap" :key="n">
             <div
