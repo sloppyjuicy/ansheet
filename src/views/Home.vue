@@ -37,8 +37,10 @@ export default {
   },
   data: () => ({
     tab: null,
-    comipemsExamID: "g2GRBMRDa25m4wFWSuK5",
-    universidadExamID: "3pNWLwTZHjMMtxrCAARn",
+    // comipemsExamID: "g2GRBMRDa25m4wFWSuK5",
+    // universidadExamID: "3pNWLwTZHjMMtxrCAARn",
+    comipemsExamID: null,
+    universidadExamID: null,
     comipemsData: null,
     universidadData: null,
   }),
@@ -50,6 +52,7 @@ export default {
     ...mapActions({
       getExam: "getExamFromDB",
       getStudents: "getStudentsFromDB",
+      getExamIDs: "getCurrentExamIDs",
     }),
     /**
      * Component Methods
@@ -66,28 +69,34 @@ export default {
     // },
   },
   async mounted() {
-    // Inititialize COMIPEMS
-    this.getExam({ type: "comipems", examID: this.comipemsExamID }).then(
-      (exam) => {
-        this.getStudents({
-          type: "comipems",
-          examID: this.comipemsExamID,
-        }).then((students) => {
-          this.comipemsData = { exam, students };
-        });
-      }
-    );
-    // Inititialize Universidad
-    this.getExam({ type: "universidad", examID: this.universidadExamID }).then(
-      (exam) => {
+    // Get exam IDs
+    this.getExamIDs().then((ids) => {
+      this.comipemsExamID = ids.comipemsExamID;
+      this.universidadExamID = ids.universidadExamID;
+      // Inititialize COMIPEMS
+      this.getExam({ type: "comipems", examID: this.comipemsExamID }).then(
+        (exam) => {
+          this.getStudents({
+            type: "comipems",
+            examID: this.comipemsExamID,
+          }).then((students) => {
+            this.comipemsData = { exam, students };
+          });
+        }
+      );
+      // Inititialize Universidad
+      this.getExam({
+        type: "universidad",
+        examID: this.universidadExamID,
+      }).then((exam) => {
         this.getStudents({
           type: "universidad",
           examID: this.universidadExamID,
         }).then((students) => {
           this.universidadData = { exam, students };
         });
-      }
-    );
+      });
+    });
   },
 };
 </script>
