@@ -4,6 +4,7 @@ node_modules
 
 firebase-config.js
 anshetv2-5-firebase-admin.json
+gen2020-2021-firebase.json
 
 # local env files
 .env.local
