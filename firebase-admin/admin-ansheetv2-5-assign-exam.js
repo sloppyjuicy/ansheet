@@ -15,8 +15,8 @@ const db = admin.firestore();
 
 (async ()=>{
 
-  const type= "comipems";
-  const examID = "g2GRBMRDa25m4wFWSuK5";
+  const type= "universidad";
+  const examID = "3pNWLwTZHjMMtxrCAARn";
   const studentID = "GIT58nT9zlMwrcB0D23I";
   const collectionName = `alumnos-${type}`;
   
@@ -40,7 +40,7 @@ const db = admin.firestore();
     const res = await db.collection(collectionName).doc(studentID).update(
       {currentExam : examID}
     );
-    console.log(res)
+    console.log("Updated student exam");
   }
 
 })();
