@@ -1,7 +1,7 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
 import Home from "../views/Home.vue";
-import Report from "@/views/Report.vue";
+import Report from "@/views/MainReport.vue";
 
 Vue.use(VueRouter);
 

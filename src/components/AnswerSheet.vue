@@ -25,11 +25,15 @@
         <v-select
           v-if="students"
           :items="students"
-          item-text="nombre"
           item-value="alumno_id"
+          :item-text="textItem"
           v-model="studentSelected"
           label="Alumno"
-        ></v-select>
+        >
+          <!-- <template v-slot:item="students">
+            HOLA {{ students.nombre }}
+          </template> -->
+        </v-select>
       </v-col>
     </v-row>
     <v-row v-if="reactivos">
@@ -79,6 +83,9 @@ export default {
     },
   },
   methods: {
+    textItem(item) {
+      return `${item.alumno_id} - ${item.nombre}`;
+    },
     validate() {
       // Validate selected student
       if (!this.studentSelected) {

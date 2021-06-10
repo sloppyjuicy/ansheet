@@ -48,6 +48,7 @@ export default {
         backgroundColor: bgColor,
         borderColor,
         borderWidth: 1,
+        // stack: `${index}`,
       };
     },
     makeDatasets(data, tooltipLabels) {
@@ -55,6 +56,7 @@ export default {
       let j = 0;
       for (const d of data) {
         datasets.push(this.makeDataset(d, tooltipLabels[j]));
+        // datasets.push(this.makeDataset(tops[j], tooltipLabels[j], j));
         j = j + 1;
       }
       return datasets;
@@ -96,11 +98,14 @@ export default {
       // console.log(studentExamsSorted);
       let labels = studentExamsSorted[0].map((m) => m.nombre);
       let scores = [];
+      let tops = [];
       for (const exam of studentExamsSorted) {
         const tmpScores = exam.map((m) => m.puntaje);
         scores.push(tmpScores);
+        const tmpTops = exam.map((m) => m.total);
+        tops.push(tmpTops);
       }
-      return { labels, scores };
+      return { labels, scores, tops };
     },
   },
   mounted() {

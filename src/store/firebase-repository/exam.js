@@ -23,13 +23,17 @@ export const exam = {
       const { type, examID } = payload;
       const examRef = doc(db, `examenes-${type}`, examID);
       const docSnap = await getDoc(examRef);
-
-      if (docSnap.exists()) {
-        commit("setExam", { ...docSnap.data(), examen_id: examID });
-      } else {
-        // doc.data() will be undefined in this case
-        console.log("No such document!");
-      }
+      return new Promise((resolve, reject) => {
+        if (docSnap.exists()) {
+          const exam = { ...docSnap.data(), examen_id: examID };
+          commit("setExam", exam);
+          resolve(exam);
+        } else {
+          // doc.data() will be undefined in this case
+          console.log("No such document!");
+          reject("No such document");
+        }
+      });
     },
   },
 };

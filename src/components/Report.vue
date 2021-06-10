@@ -16,7 +16,7 @@
     </v-snackbar>
     <v-row>
       <v-col cols="12" class="text-center">
-        <h2>Reporte de calificaciones COMIPEMS</h2>
+        <h2>Reporte de calificaciones {{ type.toUpperCase() }}</h2>
       </v-col>
       <v-col cols="12">
         <v-text-field
@@ -48,12 +48,13 @@ export default {
   components: {
     ShowGeneralReport,
   },
+  props: ["type"],
   data: () => ({
     snackVisibility: false,
     messageAlert: "",
     studentID: "",
     showGeneralReport: false,
-    type: "comipems",
+    // type: "comipems",
   }),
   computed: {
     ...mapGetters({

@@ -1,6 +1,13 @@
 import { db } from "../../../firebase-config.js";
 // IMPORT to READ data
-import { collection, query, getDocs, where } from "firebase/firestore";
+import {
+  collection,
+  query,
+  getDocs,
+  where,
+  orderBy,
+  updateDoc,
+} from "firebase/firestore";
 // IMPORT to WRITE data
 import { doc, setDoc } from "firebase/firestore";
 
@@ -43,24 +50,51 @@ export const students = {
     /**
      * Return students from DB
      */
-    async getStudentsFromDB({ commit }, { type }) {
+    async getStudentsFromDB({ commit }, { type, examID }) {
       const s = [];
-      const q = query(collection(db, `alumnos-${type}`));
+      const q = query(
+        collection(db, `alumnos-${type}`),
+        where("currentExam", "==", examID),
+        orderBy("alumno_id")
+      );
       const querySnapshot = await getDocs(q);
-      querySnapshot.forEach((doc) => {
-        // doc.data() is never undefined for query doc snapshots
-        s.push({ ...doc.data(), id: doc.id });
+      return new Promise((resolve) => {
+        querySnapshot.forEach((doc) => {
+          // doc.data() is never undefined for query doc snapshots
+          s.push({ ...doc.data(), id: doc.id });
+        });
+        commit("setStudents", s);
+        resolve(s);
       });
-      commit("setStudents", s);
     },
+    // async filterStudents({ commit }, { type, students }) {
+    //   const newS = [];
+    //   for (const s of students) {
+    //     const colName = `alumnos-${type}/${s.id}/examenes`;
+    //     console.log(colName);
+    //     const q = query(
+    //       collection(db, colName),
+    //       where("exmaen_id", "==", "g2GRBMRDa25m4wFWSuK5")
+    //     );
+    //     const querySnapshot = await getDocs(q);
+    //     if (querySnapshot == 0) {
+    //       newS.push(s);
+    //     }
+    //   }
+    //   return new Promise((resolve) => {
+    //     commit("setStudents", newS);
+    //     resolve(newS);
+    //   });
+    // },
     /**
      * Save students score in the db
      */
-    async saveScoreinDB({ _ignore }, payload) {
+    async saveScoreinDB({ nop }, payload) {
       const user = payload.student.id;
       const type = payload.type;
       const collectionRoute = `alumnos-${type}/${user}/examenes`;
       const examRef = doc(collection(db, collectionRoute));
+      const userUpdateRef = doc(db, `alumnos-${type}`, user);
       return new Promise((resolve) => {
         setDoc(examRef, {
           puntajeTotal: payload.sucessAnswersCount,
@@ -70,17 +104,12 @@ export const students = {
           puntajePorMateria: payload.sucessBySuject,
           respuestasAlumno: payload.userAnswers,
           mapaDeReactivos: payload.reactiveHeatMap,
+          fechaAplicacion: new Date(),
         });
+        // Set currentExamen to null
+        updateDoc(userUpdateRef, { currentExam: null });
         resolve();
-        /**
-         * NOTE:
-         * Following code make uses ANonymus function to get ride of non use
-         * "_ignore" variable.
-         * It its not the best option but it works at a time
-         */
-        ((t) => {
-          t;
-        })(_ignore);
+        nop;
       });
     },
     async getStudentExamFromDB({ commit }, payload) {
@@ -88,7 +117,10 @@ export const students = {
       const type = payload.type;
       const collectionRoute = `alumnos-${type}/${user}/examenes`;
       const se = [];
-      const q = query(collection(db, collectionRoute));
+      const q = query(
+        collection(db, collectionRoute),
+        orderBy("fechaAplicacion")
+      );
       const querySnapshot = await getDocs(q);
 
       return new Promise((resolve) => {

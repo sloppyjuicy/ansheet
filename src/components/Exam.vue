@@ -16,7 +16,7 @@
     </v-snackbar>
     <!-- Render answersheet or exam report -->
     <!-- But exam has to load first of that reason we have 
-    the <div v-i="exam"> -->
+    the <div v-if="exam"> -->
     <div v-if="exam">
       <answer-sheet
         v-if="finished === false"
@@ -32,7 +32,7 @@
 <script>
 import ExamReport from "@/components/ExamReport.vue";
 import AnswerSheet from "@/components/AnswerSheet.vue";
-import { mapGetters, mapActions } from "vuex";
+import { mapActions } from "vuex";
 
 export default {
   name: "Exam",
@@ -40,28 +40,18 @@ export default {
     ExamReport,
     AnswerSheet,
   },
-  props: ["examID", "examType"],
+  props: ["exam", "students", "examType"],
   data: () => ({
     snackVisibility: false,
     messageAlert: "",
     finished: false,
-    // examID: "g2GRBMRDa25m4wFWSuK5",
-    // examType: "comipems",
     resultData: {},
   }),
-  computed: {
-    /**
-     * VUEX import methods
-     */
-    ...mapGetters({ exam: "getExam", students: "getStudents" }),
-  },
   methods: {
     /**
      * VUEX import methods
      */
     ...mapActions({
-      getExam: "getExamFromDB",
-      getStudents: "getStudentsFromDB",
       saveExam: "saveScoreinDB",
     }),
     /**
@@ -84,10 +74,6 @@ export default {
           console.log(error);
         });
     },
-  },
-  created() {
-    this.getExam({ type: this.examType, examID: this.examID });
-    this.getStudents({ type: this.examType });
   },
 };
 </script>
