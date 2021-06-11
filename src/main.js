@@ -19,14 +19,14 @@ import Examen from './components/Examen';
 import Reporte from './components/Reporte';
 
 //import examenComipems from './canswers/unam2013comipems.json'; 
-import examenComipems from './canswers/unam2015comipems.json';
-/*import examenComipems from './canswers/unam2017comipems.json';*/
-/*import examenComipems from './canswers/unam2019comipems.json';*/
+//import examenComipems from './canswers/unam2015comipems.json';
+//import examenComipems from './canswers/unam2017comipems.json';
+//import examenComipems from './canswers/unam2019comipems.json';
 /*import examenComipems from './canswers/unamNAcomipems.json';*/
-/*import examenComipems from './canswers/comipems2018.json';*/
-/*import examenComipems from './canswers/unam2020comipems.json';*/
+//import examenComipems from './canswers/comipems2018.json';
+//import examenComipems from './canswers/unam2020comipems.json';
 // import examenComipems from './canswers/unam2009comipems.json';
- //import examenComipems from './canswers/unam2016comipems.json';
+import examenComipems from './canswers/unam2016comipems.json';
 // import examenComipems from './canswers/unam2012comipems.json'
 // import examenComipems from './canswers/COMIPEMS_simulacion.json'
 // import examenComipems from './canswers/Comludo2020.json'
@@ -38,7 +38,9 @@ import examenComipems from './canswers/unam2015comipems.json';
 /*import examenUniversidad from './canswers/ipn01unido2.json';*/
 // import examenUniversidad from './canswers/ipn_modif2.json';
 // import examenUniversidad from './canswers/ipn_modif3.json';
-import examenUniversidad from './canswers/Diagnostico_resp_Universidad.json';
+//import examenUniversidad from './canswers/Diagnostico_resp_Universidad.json';
+//import examenUniversidad from './canswers/unam2012area3.json';
+import examenUniversidad from './canswers/unam2015area2.json';
 
 Vue.config.productionTip = false;
 
