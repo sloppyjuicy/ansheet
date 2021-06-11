@@ -21,6 +21,7 @@
       <answer-sheet
         v-if="finished === false"
         :exam="exam"
+        :examType="examType"
         :students="students"
         @showError="showSnackMessage"
         @displayGrades="setReportData"

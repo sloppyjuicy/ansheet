@@ -17,7 +17,8 @@
     <v-row class="ml-md-5 mr-md-5">
       <v-col lg="8" md="8" sm="12" cols="12" class="d-flex align-center">
         <h2>
-          Hoja de respuestas digital {{ exam.institucion }} {{ exam.annio }}
+          Hoja de respuestas {{ examType.toUpperCase() }}:
+          {{ exam.institucion }} {{ exam.annio }}
           {{ exam.area }}
         </h2>
       </v-col>
@@ -68,7 +69,7 @@
 <script>
 export default {
   name: "AnswerSheet",
-  props: ["exam", "students"],
+  props: ["exam", "students", "examType"],
   data: () => ({
     studentSelected: null,
     reactivos: [],
