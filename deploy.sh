@@ -5,7 +5,7 @@ commitMessage=${*:-"ansheet deployment"}
 
 npm run lint --fix
 npm run build
-cp -rf dist/* README.* ${localRepoPath}
+cp -rf dist/* README.* .gitattributes ${localRepoPath}
 cd ${localRepoPath}
 git add -A
 git commit -m "${commitMessage}"

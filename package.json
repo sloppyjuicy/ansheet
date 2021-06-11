@@ -1,6 +1,6 @@
 {
-  "name": "ansheetv2-5",
-  "version": "0.1.0",
+  "name": "Ludomatis - ansheet",
+  "version": "3.0.0",
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",
