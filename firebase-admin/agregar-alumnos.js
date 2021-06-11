@@ -11,14 +11,16 @@ const db = admin.firestore();
 /**
  * IMPORTANTE:  NOOO OLVIDES MODIFICAR IDINICIAL 
  */
-const idInicial = 1027
+const idInicial = 2031
 const nombres = [
-  "Osvaldo",
+  "Fatima Rojas",
 ]
 
+let tipo = "comipems"
+
 for (let i = 0; i < nombres.length; i++){
-  console.log("======= Insercion alumno COMIPEMS =========")
-  db.collection("comipems").add({
+  console.log(`======= Insercion alumno ${tipo} =========`)
+  db.collection(tipo).add({
     alumno_id : idInicial + i,
     nombre_alumno: nombres[i]
 

@@ -9,8 +9,10 @@ admin.initializeApp({
 
 const db = admin.firestore()
 
-console.log("========== ALUMNOS COMIPEMS =================");
-db.collection("comipems").orderBy('alumno_id').get().then((querySnapshot) => {
+let tipo = "comipems"
+
+console.log(`========== ALUMNOS ${tipo} =================`);
+db.collection(tipo).orderBy('alumno_id').get().then((querySnapshot) => {
     querySnapshot.forEach((doc) => {
         const alumnos = doc.data()
         console.log(`${alumnos.alumno_id}  ${alumnos.nombre_alumno}`);
