@@ -131,13 +131,13 @@ export default {
         if (this.exam.respuestas[i] == this.reactivos[i]) {
           sucessAnswersCount = sucessAnswersCount + 1;
           reactiveHeatMap.push(true);
-          sucessBySuject[subjectIndex]++;
+          sucessBySuject[subjectIndex] = sucessBySuject[subjectIndex] + 1;
         } else {
           reactiveHeatMap.push(false);
         }
 
-        if (i >= this.exam.materias[subjectIndex].fin) {
-          subjectIndex++;
+        if (i + 1 == this.exam.materias[subjectIndex].fin) {
+          subjectIndex = subjectIndex + 1;
         }
       }
       const sucessBySujectFormated = this.formatsucessBySuject(sucessBySuject);
