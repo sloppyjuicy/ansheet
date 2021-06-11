@@ -1,28 +1,43 @@
 <template>
   <v-container fluid>
-    <!-- <v-tabs color="deep-purple accent-4" right> -->
+    <!-- Alert message component -->
+    <v-snackbar v-model="snackVisibility">
+      {{ messageAlert }}
+      <template v-slot:action="{ attrs }">
+        <v-btn
+          color="blue"
+          text
+          v-bind="attrs"
+          @click="snackVisibility = false"
+        >
+          Close
+        </v-btn>
+      </template>
+    </v-snackbar>
     <v-tabs color="deep-purple accent-4" v-model="tab">
       <v-tab>COMIPEMS</v-tab>
-      <v-tab>Universidad</v-tab>
+      <!-- <v-tab>Universidad</v-tab> -->
     </v-tabs>
 
     <v-tabs-items v-model="tab">
-      <v-tab-item>
+      <v-tab-item v-if="comipemsData">
         <exam
-          v-if="comipemsData"
           examType="comipems"
           :exam="comipemsData.exam"
           :students="comipemsData.students"
+          v-if="!notComipemsExam"
         />
+        <not-pending-exam v-else />
       </v-tab-item>
-      <v-tab-item>
+      <!-- <v-tab-item v-if="universidadData">
         <exam
-          v-if="universidadData"
+          v-if="!notUniversidadExam"
           examType="universidad"
           :exam="universidadData.exam"
           :students="universidadData.students"
         />
-      </v-tab-item>
+        <not-pending-exam v-else />
+      </v-tab-item> -->
     </v-tabs-items>
   </v-container>
 </template>
@@ -30,19 +45,21 @@
 <script>
 import Exam from "@/components/Exam.vue";
 import { mapActions } from "vuex";
+import NotPendingExam from "@/components/NotPendingExam.vue";
 export default {
   name: "Home",
   components: {
     Exam,
+    NotPendingExam,
   },
   data: () => ({
     tab: null,
-    // comipemsExamID: "g2GRBMRDa25m4wFWSuK5",
-    // universidadExamID: "3pNWLwTZHjMMtxrCAARn",
-    comipemsExamID: null,
-    universidadExamID: null,
+    snackVisibility: false,
+    messageAlert: "",
     comipemsData: null,
     universidadData: null,
+    notComipemsExam: false,
+    notUniversidadExam: false,
   }),
 
   methods: {
@@ -57,46 +74,33 @@ export default {
     /**
      * Component Methods
      */
-    // UNUSED FUNCTION
-    // TROUBLES WITH ASYNC
-    // initializeData(type, examID) {
-    //   this.getExam({ type, examID }).then((exam) => {
-    //     this.getStudents({ type }).then((students) => {
-    //       const data = { exam, students };
-    //       return data;
-    //     });
-    //   });
-    // },
+    async initializeData(type, examID) {
+      // Exam query can fail if none matching ID is found
+      const exam = await this.getExam({ type, examID }).catch(() => {
+        if (type == "comipems") {
+          this.notComipemsExam = true;
+        } else if (type == "universidad") {
+          this.notUniversidadExam = true;
+        }
+      });
+      // If query fails then students = []
+      // i. e. length is queals zero
+      const students = await this.getStudents({ type, examID });
+      const data = { exam, students };
+      return data;
+    },
   },
   async mounted() {
     // Get exam IDs
-    this.getExamIDs().then((ids) => {
-      this.comipemsExamID = ids.comipemsExamID;
-      this.universidadExamID = ids.universidadExamID;
-      // Inititialize COMIPEMS
-      this.getExam({ type: "comipems", examID: this.comipemsExamID }).then(
-        (exam) => {
-          this.getStudents({
-            type: "comipems",
-            examID: this.comipemsExamID,
-          }).then((students) => {
-            this.comipemsData = { exam, students };
-          });
-        }
-      );
-      // Inititialize Universidad
-      this.getExam({
-        type: "universidad",
-        examID: this.universidadExamID,
-      }).then((exam) => {
-        this.getStudents({
-          type: "universidad",
-          examID: this.universidadExamID,
-        }).then((students) => {
-          this.universidadData = { exam, students };
-        });
-      });
-    });
+    const ids = await this.getExamIDs();
+    this.comipemsData = await this.initializeData(
+      "comipems",
+      ids.comipemsExamID
+    );
+    // this.universidadData = await this.initializeData(
+    //   "universidad",
+    //   ids.universidadExamID
+    // );
   },
 };
 </script>

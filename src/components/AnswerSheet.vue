@@ -185,7 +185,8 @@ export default {
   mounted() {
     if (this.exam) {
       this.reactivos = Array(this.exam.numReactivos).fill(0);
-      this.TESTING_randomReactives();
+      // Uncomment only when performing test
+      // this.TESTING_randomReactives();
     }
   },
 };
