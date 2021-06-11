@@ -3,7 +3,7 @@
     <v-row>
       <v-col>
         <h3>{{ student.nombre }}</h3>
-        <p><b>Sede: </b>{{ student.sede }}</p>
+        <p v-if="student.sed != null"><b>Sede: </b>{{ student.sede }}</p>
       </v-col>
       <v-col cols="12">
         <canvas id="general" width="400" height="200"></canvas>
