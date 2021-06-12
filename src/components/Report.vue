@@ -22,9 +22,9 @@
         <v-text-field
           v-model="studentID"
           append-outer-icon="mdi-send"
+          clear-icon="mdi-close-circle"
           label="Ingrese el ID del estudiante"
           type="text"
-          clear-icon="mdi-close-circle"
           clearable
           v-on:keyup.enter="pressedSendButton"
           @click:append-outer="pressedSendButton"
