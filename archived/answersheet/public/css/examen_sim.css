@@ -1,0 +1,47 @@
+body, html {
+    height: 100%;
+    margin: 0;
+}
+.bg-3 {
+    /* The image used */
+    background-image: url("../img/pencil-690050_1920.jpg");
+
+    /* Full height */
+    height: 50%; 
+
+    /* Center and scale the image nicely */
+    background-position: 20% 60%;
+    background-repeat: no-repeat;
+    background-size: cover;
+    position: relative;
+    text-align: center;
+    color: white;
+}
+
+@media only screen and (max-width: 991px) {
+    .bg-3{
+        display: none;
+    }
+}
+@media only screen and (min-width: 991px)
+    and (max-width: 1200px) {
+    .bg-3{
+        height: 15%; 
+    }
+}
+
+.pag-round { 
+    border-radius: 50% !important;
+    margin: 0 5px;
+}
+
+.page-pn{
+    border-radius: 20px !important;
+}
+
+.solid-border{
+    border: 2px solid blue;
+    padding: 10px;
+    border-radius: 25px;
+    background-color: #FAFAFA;
+}

@@ -1,0 +1,35 @@
+body, html {
+    height: 100%;
+    margin: 0;
+}
+.bg-3 {
+    /* The image used */
+    background-image: url("../img/pencil-690050_1920.jpg");
+
+    /* Full height */
+    height: 10%; 
+
+    /* Center and scale the image nicely */
+    background-position: 20% 60%;
+    background-repeat: no-repeat;
+    background-size: cover;
+    position: relative;
+    text-align: center;
+    color: white;
+}
+
+@media only screen and (max-width: 991px) {
+    .bg-3{
+        display: none;
+    }
+}
+@media only screen and (min-width: 991px)
+    and (max-width: 1200px) {
+    .bg-3{
+        height: 15%; 
+    }
+}
+
+.start-button{
+    margin-top: 30px;
+}
