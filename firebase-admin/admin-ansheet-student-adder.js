@@ -5,6 +5,7 @@
  *              requirements to firebase
  */
 
+require('dotenv').config();
 const admin = require("firebase-admin");
 
 // Instantiating FIRESTORE DB conexion
@@ -14,16 +15,17 @@ admin.initializeApp({
 });
 const db = admin.firestore();
 
+const studentsFileRef = process.env.STUDENTSFILE
+const calculatedType = studentsFileRef.includes("comipems") 
+  ? "comipems" : studentsFileRef.includes("univerFileRef") ? "universidad" : "" 
+
+const { students: studentsData} = require(studentsFileRef);
+
 (async () => {
 
-  const type = "comipems";
+  const type = calculatedType;
+  const  newStudents = studentsData;
   const collectionName = `alumnos-${type}`;
-  const newStudents = [
-    {
-      nombre: "Quetorocako Juarez",
-      sede: "Chalco",
-    },
-  ];
 
   // Getting last ID with the exam ID ref
   const studentsRef = db.collection(collectionName)
@@ -47,7 +49,7 @@ const db = admin.firestore();
       currentExam:data.currentExam, 
       alumno_id: data.alumno_id + i + 1
     }
-    //console.log(newStudent)
+    console.log(newStudent)
     const res = await db.collection(collectionName).add(newStudent);
     console.log(newStudent.alumno_id, "=>", newStudent.nombre, "=>", res.id);
   }
