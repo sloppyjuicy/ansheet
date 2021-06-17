@@ -15,10 +15,15 @@ const db = admin.firestore();
 
 (async ()=>{
 
-  const type= "universidad";
-  const examID = "3pNWLwTZHjMMtxrCAARn";
-  const studentID = "GIT58nT9zlMwrcB0D23I";
+  const type= "comipems";
+  const examID = "r6ovlerTckqz8QsIJtKm";
+  //const studentID = "GIT58nT9zlMwrcB0D23I";
   const collectionName = `alumnos-${type}`;
+
+  // Update system params
+  const res = await db.collection("system-params").doc("a9m7zvx0RaTdD7pd0Emz")
+    .update({current_exam_comipems:examID});
+  console.log("Updated exam at system params");
   
   // Get all students id 
   const studentIDs = [];
