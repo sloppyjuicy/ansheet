@@ -1,4 +1,5 @@
 import { db } from "../../../firebase-config.js";
+// import { doc, getDoc, getDocs } from "firebase/firestore";
 import { doc, getDoc } from "firebase/firestore";
 
 export const exam = {
@@ -63,5 +64,11 @@ export const exam = {
         }
       });
     },
+    // async getAllExams({ commit }, { type }) {
+    //   const collectionName = `examenes-${type}`;
+    //   const q = query(collection(collectionName));
+    //   const querySnapshot = await getDocs(q);
+
+    // },
   },
 };
