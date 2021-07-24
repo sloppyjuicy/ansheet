@@ -16,7 +16,7 @@
     </v-snackbar>
     <v-tabs color="deep-purple accent-4" v-model="tab">
       <v-tab>COMIPEMS</v-tab>
-      <!-- <v-tab>Universidad</v-tab> -->
+      <v-tab>Universidad</v-tab>
     </v-tabs>
 
     <v-tabs-items v-model="tab">
@@ -29,7 +29,7 @@
         />
         <not-pending-exam v-else />
       </v-tab-item>
-      <!-- <v-tab-item v-if="universidadData">
+      <v-tab-item v-if="universidadData">
         <exam
           v-if="!notUniversidadExam"
           examType="universidad"
@@ -37,7 +37,7 @@
           :students="universidadData.students"
         />
         <not-pending-exam v-else />
-      </v-tab-item> -->
+      </v-tab-item>
     </v-tabs-items>
   </v-container>
 </template>
@@ -97,10 +97,10 @@ export default {
       "comipems",
       ids.comipemsExamID
     );
-    // this.universidadData = await this.initializeData(
-    //   "universidad",
-    //   ids.universidadExamID
-    // );
+    this.universidadData = await this.initializeData(
+      "universidad",
+      ids.universidadExamID
+    );
   },
 };
 </script>
