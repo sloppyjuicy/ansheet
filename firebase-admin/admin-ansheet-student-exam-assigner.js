@@ -16,7 +16,7 @@ const db = admin.firestore();
 (async ()=>{
 
   const type= "comipems";
-  const examID = "r6ovlerTckqz8QsIJtKm";
+  const examID = "kA4ZTBAyz382Vd02aEdI";
   //const studentID = "GIT58nT9zlMwrcB0D23I";
   const collectionName = `alumnos-${type}`;
 

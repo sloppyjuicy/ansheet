@@ -217,12 +217,12 @@ if (exam.tipo == "comipems") {
 // Ading name to exam base on the properties
 exam.nombre = buildExamName(exam);
 
-//db.collection(collectionName)
-  //.add(exam)
-  //.then((docRef) => {
-    //console.log(`El documento con id ${docRef.id} se inserto correctamente`);
-  //})
-  //.catch((error) => {
-    //console.log(`El documento no pudo ser insertado`);
-    //console.log(error);
-  //});
+db.collection(collectionName)
+  .add(exam)
+  .then((docRef) => {
+    console.log(`El documento con id ${docRef.id} se inserto correctamente`);
+  })
+  .catch((error) => {
+    console.log(`El documento no pudo ser insertado`);
+    console.log(error);
+  });
