@@ -4,7 +4,7 @@
  * Description: This program UPLOADS an EXAM if it feats the necesary
  *              requirements to firebase
  */
-require('dotenv').config();
+require("dotenv").config();
 const admin = require("firebase-admin");
 
 // Getting file name from env variable
@@ -165,6 +165,7 @@ const keysForTypeComipems = [
 ];
 
 const keysForTypeUniversidad = [
+  // UNAM
   "biologia",
   "espanol",
   "quimica",
@@ -175,9 +176,9 @@ const keysForTypeUniversidad = [
   "geografia",
   "fisica",
   "literatura",
-  "filosofia"
-  //"razonamiento"
-  //TODO:- Add IPN, UAM and other universities subjects
+  "filosofia",
+  // IPN Subjects
+  "prod-escrita",
 ];
 
 if (areKeysValid(exam) === false) {
