@@ -19,7 +19,7 @@
         <h2>
           Hoja de respuestas {{ examType.toUpperCase() }}:
           {{ exam.institucion }} {{ exam.annio }}
-          {{ exam.area }}
+          {{ exam.area != null ? "área " + exam.area : "" }}
         </h2>
       </v-col>
       <v-col lg="4" md="4" sm="12" cols="12" class="d-flex align-center">
