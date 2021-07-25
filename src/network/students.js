@@ -12,7 +12,6 @@ const getStudent = async (type, studentID) => {
     querySnapshot.forEach((doc) => {
       studentData = { id: doc.id, ...doc.data() };
     });
-    console.log(studentData);
     resolve(studentData);
   });
 };
