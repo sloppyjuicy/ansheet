@@ -24,7 +24,6 @@
         <exam
           examType="comipems"
           :exam="comipemsData.exam"
-          :students="comipemsData.students"
           v-if="!notComipemsExam"
         />
         <not-pending-exam v-else />
@@ -34,7 +33,6 @@
           v-if="!notUniversidadExam"
           examType="universidad"
           :exam="universidadData.exam"
-          :students="universidadData.students"
         />
         <not-pending-exam v-else />
       </v-tab-item>
@@ -83,10 +81,7 @@ export default {
           this.notUniversidadExam = true;
         }
       });
-      // If query fails then students = []
-      // i. e. length is queals zero
-      const students = await this.getStudents({ type, examID });
-      const data = { exam, students };
+      const data = { exam };
       return data;
     },
   },

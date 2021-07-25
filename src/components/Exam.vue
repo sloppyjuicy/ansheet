@@ -22,7 +22,6 @@
         v-if="finished === false"
         :exam="exam"
         :examType="examType"
-        :students="students"
         @showError="showSnackMessage"
         @displayGrades="setReportData"
       />
@@ -41,7 +40,7 @@ export default {
     ExamReport,
     AnswerSheet,
   },
-  props: ["exam", "students", "examType"],
+  props: ["exam", "examType"],
   data: () => ({
     snackVisibility: false,
     messageAlert: "",

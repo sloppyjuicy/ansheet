@@ -23,18 +23,12 @@
         </h2>
       </v-col>
       <v-col lg="4" md="4" sm="12" cols="12" class="d-flex align-center">
-        <v-select
-          v-if="students"
-          :items="students"
-          item-value="alumno_id"
-          :item-text="textItem"
-          v-model="studentSelected"
+        <v-text-field
+          color="purple darken-2"
           label="Alumno"
-        >
-          <!-- <template v-slot:item="students">
-            HOLA {{ students.nombre }}
-          </template> -->
-        </v-select>
+          v-model="studentTextField"
+          required
+        ></v-text-field>
       </v-col>
     </v-row>
     <v-row v-if="reactivos">
@@ -67,11 +61,14 @@
 </template>
 
 <script>
+import { getStudent } from "../network/students";
+
 export default {
   name: "AnswerSheet",
-  props: ["exam", "students", "examType"],
+  props: ["exam", "examType"],
   data: () => ({
-    studentSelected: null,
+    studentTextField: "",
+    student: null,
     reactivos: [],
   }),
   computed: {
@@ -87,11 +84,19 @@ export default {
     textItem(item) {
       return `${item.alumno_id} - ${item.nombre}`;
     },
-    validate() {
-      // Validate selected student
-      if (!this.studentSelected) {
-        return { state: false, message: "Seleccione un estudiante" };
+    async validate() {
+      //TODO:- Validate that only introduces digits
+      if (this.studentTextField.length < 4) {
+        return { state: false, message: "Ingresa un ID válido" };
       }
+
+      const studentID = parseInt(this.studentTextField);
+      this.student = await getStudent(this.examType, studentID);
+
+      if (!("alumno_id" in this.student)) {
+        return { state: false, message: "Ingresa un ID válido" };
+      }
+
       // Validate ALL reactives are check
       const unfillReactives = [];
       let hasUndefineds = false;
@@ -112,10 +117,12 @@ export default {
 
       return { state: true };
     },
-    gradeAnswerSheet() {
-      const { state, unfilled, message } = this.validate();
+    async gradeAnswerSheet() {
+      const { state, message } = await this.validate();
+
       // TODO:- Print this message somewhere else
-      console.log("unfilled reactives are: ", unfilled);
+      // console.log("unfilled reactives are: ", unfilled);
+
       if (state === false) {
         this.$emit("showError", message);
       } else {
@@ -147,7 +154,7 @@ export default {
         reactiveHeatMap,
         sucessBySuject: sucessBySujectFormated,
         userAnswers: this.reactivos,
-        student: this.getStudentById(this.studentSelected),
+        student: this.student,
         examen_id: this.exam.examen_id,
         exam_name: this.exam.nombre,
         totalReactives: this.exam.numReactivos,
@@ -164,16 +171,6 @@ export default {
         });
       });
       return subjectsGrades;
-    },
-    getStudentById(id) {
-      const s = this.students.filter((s) => {
-        return s.alumno_id == id;
-      });
-      if (s.length === 1) {
-        return s[0];
-      } else {
-        return {};
-      }
     },
     // FOLLOWING CODE IS ONLY FOR TESTING PURPOSES
     TESTING_randomReactives() {
