@@ -17,9 +17,11 @@ const db = admin.firestore();
 
 const studentsFileRef = process.env.STUDENTSFILE
 const calculatedType = studentsFileRef.includes("comipems") 
-  ? "comipems" : studentsFileRef.includes("univerFileRef") ? "universidad" : "" 
+  ? "comipems" : studentsFileRef.includes("universidad") ? "universidad" : "" 
 
 const { students: studentsData} = require(studentsFileRef);
+
+console.log("calculatedType is ", calculatedType);
 
 (async () => {
 

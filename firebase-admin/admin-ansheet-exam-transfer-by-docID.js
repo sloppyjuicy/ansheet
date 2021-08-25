@@ -15,10 +15,10 @@ const db = admin.firestore();
 
 (async () => {
 
-  const type = "comipems";
-  const examDocID = "r6ovlerTckqz8QsIJtKm"
-  const studentIdOrigin = 1003;
-  const studentIdTarget = 3000;
+  const type = "universidad";
+  const examDocID = "Pft1ry9hBjU5RwtBVxgJ"
+  const studentIdOrigin = 2003;
+  const studentIdTarget = 2004;
   const collectionName = `alumnos-${type}`;
 
   // Getting doc ID of origin Student

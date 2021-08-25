@@ -16,7 +16,7 @@ const db = admin.firestore();
 
 (async () => {
 
-  const type = "comipems";
+  const type = "universidad";
 
   const studentsRef = db.collection(`alumnos-${type}`).orderBy("alumno_id");
   const snapshot = await studentsRef.get();
