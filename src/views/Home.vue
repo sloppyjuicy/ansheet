@@ -42,8 +42,9 @@
 
 <script>
 import Exam from "@/components/Exam.vue";
-import { mapActions } from "vuex";
 import NotPendingExam from "@/components/NotPendingExam.vue";
+import { getExamFromDB as getExam } from "@/network/exam";
+import { getCurrentExamIDs as getExamIDs } from "@/network/exam";
 export default {
   name: "Home",
   components: {
@@ -61,20 +62,9 @@ export default {
   }),
 
   methods: {
-    /**
-     * VUEX Methods
-     */
-    ...mapActions({
-      getExam: "getExamFromDB",
-      getStudents: "getStudentsFromDB",
-      getExamIDs: "getCurrentExamIDs",
-    }),
-    /**
-     * Component Methods
-     */
     async initializeData(type, examID) {
       // Exam query can fail if none matching ID is found
-      const exam = await this.getExam({ type, examID }).catch(() => {
+      const exam = await getExam({ type, examID }).catch(() => {
         if (type == "comipems") {
           this.notComipemsExam = true;
         } else if (type == "universidad") {
@@ -87,7 +77,7 @@ export default {
   },
   async mounted() {
     // Get exam IDs
-    const ids = await this.getExamIDs();
+    const ids = await getExamIDs();
     this.comipemsData = await this.initializeData(
       "comipems",
       ids.comipemsExamID

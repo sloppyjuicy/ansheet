@@ -36,8 +36,9 @@
 </template>
 
 <script>
-import { mapActions } from "vuex";
 import ShowAnswers from "../components/ShowAnswers.vue";
+import { getExamFromDB as getExam } from "@/network/exam";
+// import { getCurrentExamIDs as getExamIDs } from "@/network/exam";
 export default {
   components: { ShowAnswers },
   data: () => ({
@@ -49,16 +50,6 @@ export default {
     exams: ["examen 1", "examen 2"],
   }),
   methods: {
-    /**
-     * VUEX Methods
-     */
-    ...mapActions({
-      getExam: "getExamFromDB",
-      getExamIDs: "getCurrentExamIDs",
-    }),
-    /**
-     * Component methods
-     */
     clearSearch() {
       this.password = "";
       this.showAnswers = false;
@@ -70,7 +61,7 @@ export default {
     },
     async initializeData(type, examID) {
       // Exam query can fail if none matching ID is found
-      const exam = await this.getExam({
+      const exam = await getExam({
         type,
         examID,
       }).catch(() => {

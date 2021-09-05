@@ -42,7 +42,10 @@
 </template>
 <script>
 import ShowGeneralReport from "@/components/ShowGeneralReport.vue";
-import { mapActions, mapGetters } from "vuex";
+// import { mapGetters } from "vuex";
+import { getStudentDocumentIDFromIntegerID as getStudentID } from "@/network/students";
+import { getStudentExamFromDB as getStudentExams } from "@/network/students";
+
 export default {
   name: "Report",
   components: {
@@ -54,23 +57,18 @@ export default {
     messageAlert: "",
     studentID: "",
     showGeneralReport: false,
+    student: null,
+    studentExams: null,
     // type: "comipems",
   }),
-  computed: {
-    ...mapGetters({
-      id: "getStudentID",
-      student: "getStudent",
-      studentExams: "getStudentExams",
-    }),
-  },
+  // computed: {
+  //   ...mapGetters({
+  //     id: "getStudentID",
+  //     student: "getStudent",
+  //     studentExams: "getStudentExams",
+  //   }),
+  // },
   methods: {
-    /**
-     * VUEX import methods
-     */
-    ...mapActions({
-      getStudentID: "getStudentDocumentIDFromIntegerID",
-      getStudentExams: "getStudentExamFromDB",
-    }),
     showSnackMessage(message) {
       this.messageAlert = message;
       this.snackVisibility = true;
@@ -102,13 +100,15 @@ export default {
       }
     },
     getStudentReport() {
-      this.getStudentID({ id: parseInt(this.studentID), type: this.type }).then(
-        () => {
-          if (this.id == "") {
+      getStudentID({ id: parseInt(this.studentID), type: this.type }).then(
+        (student) => {
+          if (student.id == "") {
             this.showSnackMessage("Usuario no encontrado");
           } else {
-            this.getStudentExams({ student_id: this.id, type: this.type }).then(
-              () => {
+            this.student = student;
+            getStudentExams({ student_id: student.id, type: this.type }).then(
+              (se) => {
+                this.studentExams = se;
                 this.showGeneralReport = true;
               }
             );

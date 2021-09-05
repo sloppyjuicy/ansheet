@@ -32,7 +32,7 @@
 <script>
 import ExamReport from "@/components/ExamReport.vue";
 import AnswerSheet from "@/components/AnswerSheet.vue";
-import { mapActions } from "vuex";
+import { saveScoreinDB as saveExam } from "@/network/students";
 
 export default {
   name: "Exam",
@@ -48,22 +48,13 @@ export default {
     resultData: {},
   }),
   methods: {
-    /**
-     * VUEX import methods
-     */
-    ...mapActions({
-      saveExam: "saveScoreinDB",
-    }),
-    /**
-     * Component methods
-     */
     showSnackMessage(message) {
       this.messageAlert = message;
       this.snackVisibility = true;
     },
     setReportData(payload) {
       this.resultData = payload;
-      this.saveExam({ ...payload, type: this.examType })
+      saveExam({ ...payload, type: this.examType })
         .then(() => {
           this.showSnackMessage("Guardado con éxito");
           this.finished = true;
