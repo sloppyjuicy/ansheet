@@ -1,8 +1,7 @@
 import { doc, getDoc } from "firebase/firestore";
 import { db } from "../../firebase-config.js";
 
-const getExamFromDB = async (payload) => {
-  const { type, examID } = payload;
+const getExamFromDB = async ({ type, examID }) => {
   const examRef = doc(db, `examenes-${type}`, examID);
   const docSnap = await getDoc(examRef);
 
@@ -11,8 +10,8 @@ const getExamFromDB = async (payload) => {
       const exam = { ...docSnap.data(), examen_id: examID };
       resolve(exam);
     } else {
-      // doc.data() will be undefined in this case
-      reject("No such document");
+      console.log("document not found");
+      reject();
     }
   });
 };

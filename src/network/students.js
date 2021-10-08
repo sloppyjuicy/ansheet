@@ -8,9 +8,11 @@ import {
 } from "firebase/firestore";
 import { setDoc, updateDoc } from "firebase/firestore";
 import { db } from "../../firebase-config.js";
+import { currentPeriod, collectionStudentNameBuilder } from "./mixins";
 
 const getStudent = async (type, studentID) => {
-  const collectionBuilder = collection(db, `alumnos-${type}`);
+  const collectionName = collectionStudentNameBuilder(currentPeriod, type);
+  const collectionBuilder = collection(db, collectionName);
   const q = query(collectionBuilder, where("alumno_id", "==", studentID));
 
   let studentData = {};
@@ -27,9 +29,10 @@ const getStudent = async (type, studentID) => {
 const saveScoreinDB = async (payload) => {
   const user = payload.student.id;
   const type = payload.type;
-  const collectionRoute = `alumnos-${type}/${user}/examenes`;
+  const rootCollection = collectionStudentNameBuilder(currentPeriod, type);
+  const collectionRoute = `${rootCollection}/${user}/examenes`;
   const examRef = doc(collection(db, collectionRoute));
-  const userUpdateRef = doc(db, `alumnos-${type}`, user);
+  const userUpdateRef = doc(db, rootCollection, user);
   return new Promise((resolve) => {
     setDoc(examRef, {
       puntajeTotal: payload.sucessAnswersCount,
@@ -50,7 +53,8 @@ const saveScoreinDB = async (payload) => {
 const getStudentExamFromDB = async (payload) => {
   const user = payload.student_id;
   const type = payload.type;
-  const collectionRoute = `alumnos-${type}/${user}/examenes`;
+  const rootCollection = collectionStudentNameBuilder(currentPeriod, type);
+  const collectionRoute = `${rootCollection}/${user}/examenes`;
   const se = [];
   const q = query(collection(db, collectionRoute), orderBy("fechaAplicacion"));
   const querySnapshot = await getDocs(q);
@@ -66,7 +70,7 @@ const getStudentExamFromDB = async (payload) => {
 };
 
 const getStudentDocumentIDFromIntegerID = async ({ id, type }) => {
-  const collectionRoute = `alumnos-${type}`;
+  const collectionRoute = collectionStudentNameBuilder(currentPeriod, type);
   // TODO:- Refactor this query
   const collectionRef = collection(db, collectionRoute);
   const q = query(collectionRef, where("alumno_id", "==", id));
