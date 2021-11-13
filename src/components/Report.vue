@@ -42,7 +42,6 @@
 </template>
 <script>
 import ShowGeneralReport from "@/components/ShowGeneralReport.vue";
-// import { mapGetters } from "vuex";
 import { getStudentDocumentIDFromIntegerID as getStudentID } from "@/network/students";
 import { getStudentExamFromDB as getStudentExams } from "@/network/students";
 
@@ -59,15 +58,8 @@ export default {
     showGeneralReport: false,
     student: null,
     studentExams: null,
-    // type: "comipems",
   }),
-  // computed: {
-  //   ...mapGetters({
-  //     id: "getStudentID",
-  //     student: "getStudent",
-  //     studentExams: "getStudentExams",
-  //   }),
-  // },
+
   methods: {
     showSnackMessage(message) {
       this.messageAlert = message;
