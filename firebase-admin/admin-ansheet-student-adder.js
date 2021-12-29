@@ -27,7 +27,7 @@ console.log("calculatedType is ", calculatedType);
 
   const type = calculatedType;
   const  newStudents = studentsData;
-  const collectionName = `alumnos-${type}`;
+  const collectionName = `alumnos-${type}-2021-2022`;
 
   // Getting last ID with the exam ID ref
   const studentsRef = db.collection(collectionName)
@@ -48,7 +48,6 @@ console.log("calculatedType is ", calculatedType);
     // Building new student object
     const newStudent = {
       ...newStudents[i],
-      currentExam:data.currentExam, 
       alumno_id: data.alumno_id + i + 1
     }
     console.log(newStudent)

@@ -16,10 +16,10 @@ const db = admin.firestore();
 (async () => {
 
   const type = "universidad";
-  const examID = "Thmf221CuNAv5kEKLe2M"
-  const studentIdOrigin = 2003;
-  const studentIdTarget = 2004;
-  const collectionName = `alumnos-${type}`;
+  const examID = "JkjDJZp8witZyVvMBnFM"
+  const studentIdOrigin = 2002;
+  const studentIdTarget = 2024;
+  const collectionName = `alumnos-${type}-2021-2022`;
 
   // Getting doc ID of origin Student
   const studentsRef = db.collection(collectionName)
@@ -46,14 +46,15 @@ const db = admin.firestore();
     return
   }
 
-  const originDocID = studentsData[0];
+  const indexStudentOrig = studentsData[0].alumno_id == studentIdOrigin? 0 : 1;
+  const originDocID = studentsData[indexStudentOrig];
   const collectionExamName = `${collectionName}/${originDocID.id}/examenes`
   const examRef = db.collection(collectionExamName)
     .where("examen_id","==",examID);
   const examSnapshot = await examRef.get();
 
   if (examSnapshot.empty) {
-    console.log('No matching documents.');
+    console.log('No matching documents..:)');
     return;
   }  
   let examTarget = {};
@@ -64,7 +65,8 @@ const db = admin.firestore();
     idForDeleting = doc.id;
   });
 
-  const targetDocID = studentsData[1];
+  const indexTarget = studentsData[1].alumno_id == studentIdTarget? 1 : 0;
+  const targetDocID = studentsData[indexTarget];
   const collectionExamTarget = `${collectionName}/${targetDocID.id}/examenes`;
 
   console.log(`Transfering exam from ${originDocID.nombre} to ${targetDocID.nombre}`);

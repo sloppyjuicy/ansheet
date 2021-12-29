@@ -18,7 +18,7 @@ const db = admin.firestore();
 
   const type = "universidad";
 
-  const studentsRef = db.collection(`alumnos-${type}`).orderBy("alumno_id");
+  const studentsRef = db.collection(`alumnos-${type}-2021-2022`).orderBy("alumno_id");
   const snapshot = await studentsRef.get();
 
   if (snapshot.empty) {
